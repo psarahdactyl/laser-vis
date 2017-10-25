@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import time
 import numpy as np
 import math
-from sklearn.neighbors import LSHForest
+#from sklearn.neighbors import LSHForest
 from sklearn.neighbors import NearestNeighbors
 
 '''
@@ -15,12 +15,12 @@ Implemented by Sarah Kushner October 2017.
 '''
 
 
-def create_pyramid(image):
-    # generate Gaussian pyramid for A
+def create_pyramid(image, num_levels):
+    # generate Gaussian pyramid with num_levels for image
     G = image.copy()
     gp = [G]
     h,w,c = image.shape
-    for i in range(int(math.log(min(h,w),2))):
+    for i in range(num_levels):
         print(i)
         # downsample
         G = cv2.pyrDown(G)
@@ -34,13 +34,30 @@ def create_pyramid(image):
     return gp
 
 def compute_features(image):
-    f = image
     # append luminance
     yuv = cv2.cvtColor(image, cv2.COLOR_BGR2YUV) 
-    f = np.concatenate((f,yuv), axis=2)
-    return f[...,0:4]
+    rgbyuv = np.concatenate((image, yuv), axis=2)
+    rgby = f[...,0:4]
+
+    h,w,c = image.shape
+
+    f_3x3 = np.ones(h-2,w-2,c*9)
+    f_5x5 = np.ones(h-4,w-4,c*25)
+
+    # go through image and get features by neighboorhoods
+    h,w,c = rgby.shape
+    for i,row in enumerate(h):
+    	for j,p in enumerate(r):
+    		small = find_3x3_N(rgby, (i,j))
+    		large = find_5x5_N(rgby, (i,j))
+    		if small is not None:
+    			f_3x3[i][j] = small.flatten
+    		if large is not None:
+    			f_5x5[i][j] = large.flatten
+
+    return (f_3x3, f_5x5)
     
-def make_search_structure(f):
+def make_search_structure(features, level):
     #lshf = LSHForest(n_estimators=20, n_candidates=200, n_neighbors=1).fit(f)
     h,w,c = f.shape
     f = f.reshape(h*w, c)
@@ -49,16 +66,22 @@ def make_search_structure(f):
 
 def find_3x3_N(matrix, point):
     i,j = point
+    if i-3 < 0 or i+3 > matrix.shape[0]:
+    	return None
+    else if j-3 < 0 or j+3 > matrix.shape[1]:
+    	return None
     return matrix[np.ix_([i-1,i,i+1],[j-1,j,j+1])]
 
 def find_5x5_N(matrix, point):
     i,j = point
+    if i-5 < 0 or i+5 > matrix.shape[0]:
+    	return None
+    else if j-5 < 0 or j+5 > matrix.shape[1]:
+    	return None
     return matrix[np.ix_([i-2,i-1,i,i+1,i+2],[j-2,j-1,j,j+1,j+2])]
 
 # concatenates a 3x3 neighborhood and a 5x5 neighborhood
-def F_l(matrix, point):
-    small = find_3x3_N(matrix, point)
-    large = find_5x5_N(matrix, point)
+def F_l(small, large):
     return small.flatten() + large.flatten()
 
 def find_best_match(a, a_prime, b, b_prime, s, l, q, i, j,
@@ -108,39 +131,67 @@ def best_coherence_match(a, a_prime, b, b_prime, s, l, q, i, j, features):
 
 # create image analogy
 def get_b_prime(a, a_prime, b):
+	images = [a, a_prime, b]
+
+    # find the minimum dimension
+    a_h,a_w,a_c = a.shape
+    a_prime_h,a_prime_w,a_prime_c = a_prime.shape
+    b_h,b_w,b_c = b.shape
+
+    if a.shape is not a_prime.shape:
+    	print("The images A and A' must be of the same dimensions.")
+    	return -1
+
+    num_levels = int(math.log(min(a_h,b_h,a_,b_w),2))
+
     # initialize image pyramids for A, A', and B
-    a_img_pyr = create_pyramid(a)
-    a_prime_img_pyr = create_pyramid(a_prime)
-    b_img_pyr = create_pyramid(b)
-    pyramids = (a_img_pyr, b_img_pyr, a_prime_img_pyr)
+    image_pyramids = list() # [A_pyramid, A'_pyramid, B pyramid]
+    for im in images:
+    	image_pyramids.append(create_pyramid(im, num_levels))
+    # reversed because it goes from coarse to fine
+    image_pyramids = reversed(image_pyramids)
 
-
-    # find best match
+    # compute features for A, A', and B
+    features = list()
+    for pyr in image_pyramids:
+    	pyr_features = list()
+    	for im in pyr:
+    		# appends in the form of (3x3 neighborhood features, 5x5 features)
+    		pyr_features.append(compute_features(im))
+    	# has the form :
+    	# [
+    	#   [features of every image in pyramid A], 
+    	#   [features of every image in pyramid A'],
+    	#   [features of every image in pyramid B] 
+    	#      ]
+    	features.append(pyr_features) 
+   
+    # initialize B' stuff
     b_prime = np.ones(b.shape)
     b_prime_img_pyr = list()
 
-    num_levels = min(len(a_img_pyr), len(b_img_pyr), len(a_prime_img_pyr))
-    for l in reversed(range(num_levels)):
-        b_prime_l = np.ones(b_img_pyr[l].shape)
+    # find best match at every level
+    for l in range(num_levels):
+    	# image_pyramids[2] is the pyramid for B'
+    	# image_pyramids[2][l] is the image at level l in the B' pyramid
+        b_prime_l = np.ones(image_pyramids[2][l].shape)
+
+        # source stores all the indices of taken pixels in B'
         source_l = np.ones(b_prime_l.shape)
-        # compute features for A, A', and B
-        a_features = [compute_features(a) for a in a_img_pyr]
-        a_prime_features = [compute_features(a_prime) for a_prime in a_prime_img_pyr]
-        b_features = [compute_features(b) for b in b_img_pyr]
-        #print(a_features)
-        features = (a_features, b_features, a_prime_features)
 
         # initialize search structures for approximate nearest neighbor
-        a_structure, reshaped_a = make_search_structure(a_features)
-        a_prime_structure, reshaped_a_prime = make_search_structure(a_prime_features)
-        b_structure, reshaped_b = make_search_structure(b_features)
-        search_structures = ((a_structure, reshaped_a), (b_structure, reshaped_a_prime), (a_prime_structure, reshaped_b))
+        if l is not 0:
+        	search_structure, reshaped_features = make_search_structure(features[l], l)
+        else:
+        	search_structure, reshaped_features = make_search_structure(features[l]+features[l-1], l)
+
         for i,row in enumerate(b_prime_l):
             for j,q in enumerate(row):
                 p = find_best_match(a, a_prime, b, b_prime, source_l, l, b[i][j], i, j, 
                         pyramids, features, search_structures)
                 b_prime_l[i][j] = p
         b_prime_img_pyr.append(b_prime_l)
+        
     return b_prime_img_pyr[num_levels]
 
 
