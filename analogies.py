@@ -5,15 +5,15 @@ import matplotlib.pyplot as plt
 import time
 import numpy as np
 import math
+#from pyflann import *
 #from sklearn.neighbors import LSHForest
 from sklearn.neighbors import NearestNeighbors
 
 '''
 Based on the paper [Image Analogies, 2001] by Hertzmann et al.
-Implemented by Sarah Kushner October 2017.
+Implemented by Sarah Kushner October/November 2017.
 
 '''
-
 
 def create_pyramid(image, num_levels):
     # generate Gaussian pyramid with num_levels for image
@@ -40,13 +40,19 @@ def compute_features(image):
     rgby = rgbyuv[...,0:4]
 
     h,w,c = image.shape
+    print('image shape: ', image.shape)
 
     if h-2 > 0 and w-2 > 0:
         f_3x3 = np.ones((h-2,w-2,rgby.shape[2]*9))
+    elif h-2 > 0 or w-2 > 0:
+        f_3x3 = np.ones((1,1,rgby.shape[2]*9))
     else:
         f_3x3 = np.ones((3,3,rgby.shape[2]*9))
+        
     if h-4 > 0 and w-4 > 0:
         f_5x5 = np.ones((h-4,w-4,rgby.shape[2]*25))
+    elif h-4 > 0 or w-4 > 0:
+        f_5x5 = np.ones((3,3,rgby.shape[2]*25))
     else:
         f_5x5 = np.ones((5,5,rgby.shape[2]*25))
 
@@ -56,9 +62,9 @@ def compute_features(image):
         for j,p in enumerate(row):
             small = find_3x3_N(rgby, (i,j))
             large = find_5x5_N(rgby, (i,j))
-            if small is not None:
+            if small is not 0:
                 f_3x3[i][j] = small.flatten()
-            if large is not None:
+            if large is not 0:
                 f_5x5[i][j] = large.flatten()
 
     return (f_3x3, f_5x5)
@@ -76,17 +82,22 @@ def combine_features(list_of_features):
         combined = reshaped_current_layer
 
     else:
-        current_layer = list_of_features[0][1] # 5x5
-        c_c = current_layer.shape[2]
-        previous_layer = list_of_features[1][0] # 3x3
-        p_c = previous_layer.shape[2]
-        g = (c_c - p_c) / 2
+        current_layer = list_of_features[0][1] # A_l 5x5
+        c_h, c_w, c_c = current_layer.shape
+        previous_layer = list_of_features[1][0] # A_(l-1) 3x3
+        p_h, p_w, p_c = previous_layer.shape
+        g = int((c_c - p_c) / 2)
+
+        print(current_layer.shape, previous_layer.shape)
 
         previous_layer = np.lib.pad(previous_layer, ((1,1),(1,1),(g,g)), 'constant', constant_values=0)
+
+        print(current_layer.shape, previous_layer.shape)
+
         reshaped_current_layer = reshape(current_layer)
         reshaped_previous_layer = reshape(previous_layer)
 
-        #print(reshaped_current_layer.shape, reshaped_previous_layer.shape)
+        print(reshaped_current_layer.shape, reshaped_previous_layer.shape)
 
         combined = np.concatenate((reshaped_current_layer, reshaped_previous_layer), axis=1)
         print(combined)
