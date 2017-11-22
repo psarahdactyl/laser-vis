@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+ #!/usr/bin/env python
 
 import cv2
 import matplotlib.pyplot as plt
@@ -54,7 +54,7 @@ def compute_features(image):
     elif h-4 > 0 or w-4 > 0:
         f_5x5 = np.ones((3,3,rgby.shape[2]*25))
     else:
-        f_5x5 = np.ones((5,5,rgby.shape[2]*25))
+        f_5x5 = np.ones((5,5,rgby.shape[2]*25)) 
 
     # go through image and get features by neighboorhoods
     h,w,c = rgby.shape
