@@ -31,8 +31,6 @@ def create_pyramid(image, num_levels):
         #plt.show()
         #plt.imshow(U)
         #plt.show()
-        print('pyramid shape:')
-        print(G.shape)
     return gp
 
 def compute_features(image):
@@ -42,21 +40,10 @@ def compute_features(image):
     rgby = rgbyuv[...,0:4]
 
     h,w,c = image.shape
-    print('image shape: ', image.shape)
+    #print('image shape: ', image.shape)
 
-    if h-2 > 0 and w-2 > 0:
-        f_3x3 = np.ones((h-2,w-2,rgby.shape[2]*9))
-    elif h-2 > 0 or w-2 > 0:
-        f_3x3 = np.ones((1,1,rgby.shape[2]*9))
-    else:
-        f_3x3 = np.ones((3,3,rgby.shape[2]*9))
-        
-    if h-4 > 0 and w-4 > 0:
-        f_5x5 = np.ones((h-4,w-4,rgby.shape[2]*25))
-    elif h-4 > 0 or w-4 > 0:
-        f_5x5 = np.ones((3,3,rgby.shape[2]*25))
-    else:
-        f_5x5 = np.ones((5,5,rgby.shape[2]*25)) 
+    f_3x3 = np.zeros((h,w,rgby.shape[2]*9))
+    f_5x5 = np.zeros((h,w,rgby.shape[2]*25)) 
 
     # go through image and get features by neighboorhoods
     h,w,c = rgby.shape
@@ -77,6 +64,18 @@ def reshape(matrix):
     f = f.reshape(h*w,c)
     return f
 
+def pad_matrix(matrix, new_shape):
+    p_h, p_w, p_c = matrix.shape
+    c_h, c_w, c_c = new_shape
+    h_diff = int((c_h - p_h) / 2)
+    w_diff = int((c_w - p_w) / 2)
+    h_buffer = (c_h - p_h) % 2
+    w_buffer = (c_w - p_w) % 2
+    c_diff = int((c_c - p_c) / 2)
+
+    return np.lib.pad(matrix, 
+        ((h_diff,h_diff+h_buffer),(w_diff,w_diff+w_buffer),(c_diff,c_diff)), 'mean')
+
 def combine_features(list_of_features):
     if len(list_of_features) == 1:
         current_layer = list_of_features[0][1]
@@ -85,32 +84,23 @@ def combine_features(list_of_features):
 
     else:
         current_layer = list_of_features[0][1] # A_l 5x5
-        c_h, c_w, c_c = current_layer.shape
         previous_layer = list_of_features[1][0] # A_(l-1) 3x3
-        p_h, p_w, p_c = previous_layer.shape
-        g = int((c_c - p_c) / 2)
 
-        print(current_layer.shape, previous_layer.shape)
-
-        previous_layer = np.lib.pad(previous_layer, ((1,1),(1,1),(g,g)), 'constant', constant_values=0)
-
-        print(current_layer.shape, previous_layer.shape)
+        previous_layer = pad_matrix(previous_layer, current_layer.shape)
 
         reshaped_current_layer = reshape(current_layer)
         reshaped_previous_layer = reshape(previous_layer)
 
-        print(reshaped_current_layer.shape, reshaped_previous_layer.shape)
-
-        combined = np.concatenate((reshaped_current_layer, reshaped_previous_layer), axis=1)
-        print(combined)
+        #print(reshaped_previous_layer.shape, reshaped_current_layer.shape)
+        combined = np.concatenate((reshaped_current_layer, reshaped_previous_layer), axis=0)
 
     print("combined")
-    print(type(combined))
+    #print(type(combined))
     print(combined.shape)
     return combined
 
 def make_search_structure(features, level):
-    #lshf = LSHForest(n_estimators=20, n_candidates=200, n_neighbors=1).fit(f)
+    #nbrs = LSHForest(n_estimators=20, n_candidates=200, n_neighbors=1).fit(f)
     #h,w,c = features.shape
     f = features
     nbrs = NearestNeighbors(n_neighbors=1, algorithm='brute').fit(f)
@@ -147,15 +137,34 @@ def find_half_5x5_N(matrix, point):
 def F_l(point, layer, image_pyramid):
     l = layer
     if l is not 0:
-        small = find_3x3_N(image_pyramid[l], point) + find_3x3_N(image_pyramid[l-1], point)
-        large = find_5x5_N(image_pyramid[l], point) + find_5x5_N(image_pyramid[l-1], point)
+        current_layer_small = find_3x3_N(image_pyramid[l], point)
+        previous_layer_small = find_3x3_N(image_pyramid[l-1], point)
+        current_layer_large = find_5x5_N(image_pyramid[l], point)
+        previous_layer_large = find_5x5_N(image_pyramid[l-1], point)
+
+        if previous_layer_small is 0:
+            small = current_layer_small
+        else:
+            small = np.concatenate((current_layer_small, previous_layer_small), axis=0)
+
+        if previous_layer_large is 0:
+            large = current_layer_large
+        else:
+            large = np.concatenate((current_layer_large, previous_layer_large), axis=0)
+
     else:
         small = find_3x3_N(image_pyramid[l], point)
         large = find_5x5_N(image_pyramid[l], point)
-    if small is not 0 and large is not 0:
-        return small.flatten() + large.flatten()
-    else:
+
+    if small is 0 and large is 0:
         return None
+    elif large is 0:
+        print(small.shape)
+        small = pad_matrix(small, (5,5,3))
+        print(small.shape)
+        return np.concatenate((small.flatten(), small.flatten()), axis=0)
+    else:
+        return np.concatenate((small.flatten(), large.flatten()), axis=0)
 
 def find_best_match(s, l, point, image_pyramids, search_structure):
     # find matches
@@ -263,6 +272,7 @@ def get_b_prime(a, a_prime, b):
         print("... initializing search structure (NearestNeighbors)")
         if l == 0:
             f = combine_features([a_features[l]]) # 5x5
+            print('features', f.shape)
             search_structure = make_search_structure(f, l)
         else:
             f = combine_features([a_features[l], a_features[l-1]])
