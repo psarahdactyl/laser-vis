@@ -31,6 +31,8 @@ def create_pyramid(image, num_levels):
         #plt.show()
         #plt.imshow(U)
         #plt.show()
+        print('pyramid shape:')
+        print(G.shape)
     return gp
 
 def compute_features(image):
