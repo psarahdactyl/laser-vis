@@ -1,0 +1,55 @@
+Making image pyramids...
+Computing features...
+Creating B'...
+... at level 0
+... initializing search structure (NearestNeighbors)
+combined
+(6L, 100L)
+('features', (6L, 100L))
+... finding best pixel match
+----------------------------
+... at level 1
+... initializing search structure (NearestNeighbors)
+((20L, 100L), (20L, 100L))
+combined
+(40L, 100L)
+... finding best pixel match
+----------------------------
+... at level 2
+... initializing search structure (NearestNeighbors)
+((70L, 100L), (70L, 100L))
+combined
+(140L, 100L)
+... finding best pixel match
+(3L, 3L, 3L)
+(5L, 5L, 3L)
+[ 28   1  63  35   0  36  36   1  68  13   1  84  28   1  63   3   2 137
+   8   1  89   1   2 157   0   3 164   3   2 137  28   0  47  48   0  13
+  31   0  46   4   0  83  28   0  47  53   0   4  48   0   7  77   0   1
+  35   0   5  53   0   4  28   1  63  35   0  36  36   1  68  13   1  84
+  28   1  63  28   1  63  35   0  36  36   1  68  13   1  84  28   1  63
+   3   2 137   8   1  89   1   2 157   0   3 164   3   2 137  28   0  47
+  48   0  13  31   0  46   4   0  83  28   0  47  53   0   4  48   0   7
+  77   0   1  35   0   5  53   0   4  28   1  63  35   0  36  36   1  68
+  13   1  84  28   1  63]
+(150L,)
+Traceback (most recent call last):
+  File "analogies.py", line 309, in <module>
+    b_prime = get_b_prime(a, a_prime, b)
+  File "analogies.py", line 291, in get_b_prime
+    point, point_index = find_best_match(source_l, l, (i,j), image_pyramids, search_structure)
+  File "analogies.py", line 177, in find_best_match
+    p_app, point_index = best_approx_match(l, q, search_structure, image_pyramids)
+  File "analogies.py", line 191, in best_approx_match
+    p_i = search_structure.kneighbors([q], 1, return_distance=False)
+  File "C:\Anaconda2\lib\site-packages\sklearn\neighbors\base.py", line 371, in kneighbors
+    n_jobs=n_jobs, squared=True)
+  File "C:\Anaconda2\lib\site-packages\sklearn\metrics\pairwise.py", line 1207, in pairwise_distances
+    return _parallel_pairwise(X, Y, func, n_jobs, **kwds)
+  File "C:\Anaconda2\lib\site-packages\sklearn\metrics\pairwise.py", line 1054, in _parallel_pairwise
+    return func(X, Y, **kwds)
+  File "C:\Anaconda2\lib\site-packages\sklearn\metrics\pairwise.py", line 208, in euclidean_distances
+    X, Y = check_pairwise_arrays(X, Y)
+  File "C:\Anaconda2\lib\site-packages\sklearn\metrics\pairwise.py", line 108, in check_pairwise_arrays
+    X.shape[1], Y.shape[1]))
+ValueError: Incompatible dimension for X and Y matrices: X.shape[1] == 150 while Y.shape[1] == 100
