@@ -1,0 +1,27 @@
+{
+  "name": "webpage",
+  "version": "1.0.0",
+  "description": "laser cutter visualization webpage",
+  "main": "script/lasersketcher.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "(git://github.com/psaradactyl/laser-vis.git)"
+  },
+  "keywords": [
+    "npm",
+    "laser",
+    "cutting",
+    "visualization",
+    "vector",
+    "graphics"
+  ],
+  "author": "Sarah Kushner <sak@cs.toronto.edu>",
+  "license": "ISC",
+  "dependencies": {
+    "fine-uploader": "^5.15.6",
+    "paper": "^0.11.5"
+  }
+}

@@ -1,43 +1,35 @@
 <!doctype html>
 <html>
   <head>
-    <title>Mon premier rendu 3D avec Three.js</title>
+    <title>Laser Sketcher</title>
     <meta charset="utf-8">
     <link href="css/main.css" rel="stylesheet"/>
+    <!-- Load the Paper.js library -->
+    <script type="text/javascript" src="node_modules/paper/dist/paper-full.js"></script>
+    <!-- Load external PaperScript and associate it with myCanvas -->
+    <script type="text/paperscript" src="script/draw.js" canvas="mainCanvas"></script>
+    <!--<script src="http://mrdoob.github.com/three.js/build/three.min.js"></script>-->
+
+        <!-- Fine Uploader Gallery CSS file
+    ====================================================================== -->
+    <link href="node_modules/fine-uploader/all.fine-uploader/fine-uploader-gallery.min.css" rel="stylesheet">
+
+    <!-- Fine Uploader JS file
+    ====================================================================== -->
+    <script type="text/javascript" src="node_modules/fine-uploader/all.fine-uploader/all.fine-uploader.min.js"></script>
+
+    <!-- Fine Uploader Gallery template
+    ====================================================================== -->
   </head>
 <body>
-    
-  <script src="script/p5.min.js" type="text/javascript"></script>
-  <script src="script/p5.dom.min.js" type="text/javascript"></script>
-  <!--<script src="lasersketcher.js" type="text/javascript"></script>-->
-
-  <div id="p5container"></div>
-  
-    <script type="text/javascript">
-
-    function setup() {
-      var canvas = createCanvas(850, 500);
-      canvas.parent("p5container");
-      background(255);
-    }
-
-    function draw() {
-      stroke(0);
-      if (mouseIsPressed == true) {
-        line(mouseX, mouseY, pmouseX, pmouseY);
-      }
-    }
-    </script>
-   
-  </div>
-  <script src="lasersketcher.js" type="text/javascript"></script>
 
 
-  <canvas id="myCanvas" width="850" height="500" style="border:1px;">
+
+  <canvas id="mainCanvas">
     Your browser does not support the HTML5 canvas tag.
   </canvas>
 
-  <script src="http://mrdoob.github.com/three.js/build/three.min.js"></script>
+ 
  
 </body>
 </html>
