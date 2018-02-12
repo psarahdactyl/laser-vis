@@ -21,7 +21,9 @@
   "author": "Sarah Kushner <sak@cs.toronto.edu>",
   "license": "ISC",
   "dependencies": {
+    "curl": "^0.1.4",
     "fine-uploader": "^5.15.6",
-    "paper": "^0.11.5"
+    "paper": "^0.11.5",
+    "php": "0.0.1"
   }
 }
