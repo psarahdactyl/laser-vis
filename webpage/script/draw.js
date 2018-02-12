@@ -70,7 +70,10 @@ function onMouseDown(event) {
 	}
 
 	if (hitResult) {
-		activePath = hitResult.item;
+		if (activePath)
+			activePath.selected = false;
+		if (hitResult.item !== selectionRectangle) 
+			activePath = hitResult.item;
 		activePath.fullySelected = true;
 		if (hitResult.type == 'segment') {
 			segment = hitResult.segment;
@@ -81,7 +84,7 @@ function onMouseDown(event) {
 			initSelectionRectangle(activePath);
 		} else if (hitResult.type == 'bounds') {
 			var location = hitResult.location;
-			console.log('bounds');
+			console.log(hitResult.bounds);
 			segment = hitResult.bounds;
 
 		}
@@ -96,6 +99,7 @@ function onMouseDown(event) {
 		}
 		if (selectionRectangle) {
 			selectionRectangle.selected = false;
+			selectionRectangle.remove();
 			selectionRectangle = null;
 		}
 	}
