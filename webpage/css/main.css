@@ -51,10 +51,10 @@ table {
 #mainCanvas {
 	float:right;
 	width: 80% !important;
-	height:100% !important;
+	height:10 0% !important;
 }
 
-#uploader {
+#panel {
 	float:left;
 	width:20%;
 	height:100% !important;

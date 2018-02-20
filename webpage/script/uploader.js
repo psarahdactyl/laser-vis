@@ -1,8 +1,9 @@
 var galleryUploader = new qq.FineUploader({
     element: document.getElementById("fine-uploader-gallery"),
+    debug: true,
     template: 'qq-template-gallery',
     request: {
-        endpoint: '../server/uploads/php.php'
+        endpoint: '../server/uploads/'
     },
     thumbnails: {
         placeholders: {
@@ -11,6 +12,6 @@ var galleryUploader = new qq.FineUploader({
         }
     },
     validation: {
-        allowedExtensions: ['pdf', 'svg']
+        allowedExtensions: ['pdf', 'svg', 'ai', 'png', 'jpg']
     }
 });

@@ -1,3 +1,10 @@
+class SelectionBounds {
+    constructor()
+
+
+}
+
+
 function initSelectionRectangle(shape) {
     if(selectionRectangle)
         selectionRectangle.remove();
