@@ -9,6 +9,8 @@ import math
 #from sklearn.neighbors import LSHForest
 from sklearn.neighbors import NearestNeighbors
 
+from extractfeatures import compute_features
+
 '''
 Based on the paper [Image Analogies, 2001] by Hertzmann et al.
 Implemented by Sarah Kushner October/November 2017.
@@ -33,6 +35,7 @@ def create_pyramid(image, num_levels):
         #plt.show()
     return gp
 
+'''
 def compute_features(image):
     # append luminance
     yuv = cv2.cvtColor(image, cv2.COLOR_BGR2YUV) 
@@ -57,6 +60,7 @@ def compute_features(image):
                 f_5x5[i][j] = large.flatten()
 
     return (f_3x3, f_5x5)
+'''
 
 def reshape(matrix):
     f = matrix
@@ -105,22 +109,6 @@ def make_search_structure(features, level):
     f = features
     nbrs = NearestNeighbors(n_neighbors=1, algorithm='brute').fit(f)
     return nbrs
-
-def find_3x3_N(matrix, point):
-    i,j = point
-    if i-3 < 0 or i+3 > matrix.shape[0]:
-        return 0
-    elif j-3 < 0 or j+3 > matrix.shape[1]:
-        return 0
-    return matrix[np.ix_([i-1,i,i+1],[j-1,j,j+1])]
-
-def find_5x5_N(matrix, point):
-    i,j = point
-    if i-5 < 0 or i+5 > matrix.shape[0]:
-        return 0
-    elif j-5 < 0 or j+5 > matrix.shape[1]:
-        return 0
-    return matrix[np.ix_([i-2,i-1,i,i+1,i+2],[j-2,j-1,j,j+1,j+2])]
 
 def find_half_5x5_N(matrix, point):
     i,j = point

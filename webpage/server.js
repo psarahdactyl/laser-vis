@@ -35,7 +35,7 @@ var express = require("express"),
 
 // routes
 app.use(express.static(publicDir));
-app.post(uploadedFilesPath, onUpload);
+app.post("/server/uploads/", onUpload);
 app.use(nodeModulesDir, express.static(nodeModulesDir));
 app.delete("/uploads/:uuid", onDeleteFile);
 
@@ -45,7 +45,6 @@ app.listen(port, function(){
 });
 
 function onUpload(req, res) {
-            console.log('HELP ME');
     var form = new multiparty.Form();
 
     form.parse(req, function(err, fields, files) {

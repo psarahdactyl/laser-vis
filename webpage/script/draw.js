@@ -59,10 +59,17 @@ function onMouseDown(event) {
 
 	if (event.modifiers.shift) {
 		activePath = null;
-		console.log(event.modifiers);
+		//console.log(event.modifiers);
 		path = new Path({
 			segments: [event.point],
-			strokeColor: 'black',
+			strokeColor: {
+				gradient: {
+					stops: ['#351909', '#3D2C1E', '#5C3B22', '#553C2B', '#A88B6F']
+				},
+				origin: view.center - [0,80] ,
+				destination: view.center + [0,80]
+			},
+			strokeWidth: 2,
 			// Select the path, so we can see its segment points:
 			fullySelected: true
 		}); 
