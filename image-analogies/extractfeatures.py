@@ -6,9 +6,8 @@ import time
 import numpy as np
 import math
 
-features = list()
-
 def find_3x3_N(matrix):
+    features = list()
     h,w,c = matrix.shape
     for i in xrange(h-2):
         i += 1
@@ -17,6 +16,7 @@ def find_3x3_N(matrix):
             features.append(matrix[np.ix_([i-1,i,i+1],[j-1,j,j+1])])
 
 def find_3x3_edges(matrix):
+    features = list()
     h,w,c = matrix.shape
     for i in xrange(w-2):
         i += 1
@@ -29,13 +29,27 @@ def find_3x3_edges(matrix):
 
 
 def find_3x3_corners(matrix):
+    features = list()
     h,w,c = matrix.shape
     features.append(matrix[np.ix_([0,1],[0,1])])
     features.append(matrix[np.ix_([0,1],[w-2,w-1])])
     features.append(matrix[np.ix_([h-2,h-1],[0,1])])
     features.append(matrix[np.ix_([h-2,h-1],[w-2,w-1])])
 
+def compute_3x3_features(image):
+    features = list()
+    h,w,c = image.shape
+    edges = find_3x3_edges(image)
+    corners = find_3x3_corners(image)
+    neighborhoods = find_3x3_N(image)
+
+    features.append(corners[0])
+    features.append(edges[0:w])
+    features.append(corners[1])
+    features.append(edges[])
+
 def find_5x5_N(matrix):
+    features = list()
     h,w,c = matrix.shape
     for i in xrange(h-4):
         i += 2
@@ -44,6 +58,7 @@ def find_5x5_N(matrix):
             features.append(matrix[np.ix_([i-2,i-1,i,i+1,i+2],[j-2,j-1,j,j+1,j+2])])
 
 def find_5x5_edges(matrix):
+    features = list()
     h,w,c = matrix.shape
     for i in xrange(w-4):
         i += 2
@@ -55,6 +70,7 @@ def find_5x5_edges(matrix):
         features.append(matrix[np.ix_([i-2,i-1,i,i+1,i+2],[w-1,w-2,w-3])])
 
 def find_5x5_corners(matrix):
+    features = list()
     h,w,c = matrix.shape
     features.append(matrix[np.ix_([0,1,2],[0,1,2])])
     features.append(matrix[np.ix_([0,1,2],[w-3,w-2,w-1])])
@@ -83,3 +99,5 @@ def compute_features(image, size):
         find_5x5_edges(image)
 
         find_5x5_corners(image)
+
+    return
