@@ -1,3 +1,7 @@
+$(window).load(function(){
+    // do something 
+
+
  // canvas settings
 var viewWidth = 512,
     viewHeight = 512,
@@ -248,8 +252,10 @@ texture_img.onload = imageLoadedHandler;
 texture_img.src = "../img/wood.jpg";
 texture_normal_img.crossOrigin = "Anonymous";
 texture_normal_img.onload = imageLoadedHandler;
-texture_normal_img.src = "../img/wood.jpg";
+normal_map = new NMO_NormalMap();
+normal_map.createNormalMap(texture_normal_img.src);
 
+});
 
  /*
  var canvas = document.getElementById('mainCanvas');

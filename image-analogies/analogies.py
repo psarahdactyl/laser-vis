@@ -5,15 +5,14 @@ import matplotlib.pyplot as plt
 import time
 import numpy as np
 import math
-#from pyflann import *
-#from sklearn.neighbors import LSHForest
-from sklearn.neighbors import NearestNeighbors
+
+from annoy import AnnoyIndex
 
 from extractfeatures import compute_features
 
 '''
 Based on the paper [Image Analogies, 2001] by Hertzmann et al.
-Implemented by Sarah Kushner October/November 2017.
+Implemented by Sarah Kushner 2017/2018.
 
 '''
 
