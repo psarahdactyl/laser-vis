@@ -1,6 +1,6 @@
 // canvas settings
-var viewWidth = 460,
-    viewHeight = 685,
+var viewWidth = 512,
+    viewHeight = 512,
     drawingCanvas = document.getElementById("renderCanvas"),
     ctx,
     timeStep = (1/60),
@@ -48,8 +48,8 @@ function initDrawingCanvas() {
 }
 
 function initTextures() {
-    var textureW = 460,
-        textureH = 685,
+    var textureW = 512,
+        textureH = 512,
         data;
 
     // get the pixel colors of the texture
@@ -245,7 +245,7 @@ function imageLoadedHandler() {
 
 texture_img.crossOrigin = "Anonymous";
 texture_img.onload = imageLoadedHandler;
-texture_img.src = '../../normal-mapping/test.JPG';
+texture_img.src = "../img/test1.jpg";
 texture_normal_img.crossOrigin = "Anonymous";
 texture_normal_img.onload = imageLoadedHandler;
-texture_normal_img.src = '../../normal-mapping/normal.png';
+texture_normal_img.src = texture_img.src+"_normal.png";

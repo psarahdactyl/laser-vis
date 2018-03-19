@@ -12,6 +12,7 @@ def create_normal_map(img):
     blur_img = cv2.GaussianBlur(img,(3,3),0)
 
     grayscale_img = cv2.cvtColor(blur_img, cv2.COLOR_BGR2GRAY)
+    grayscale_img = cv2.bitwise_not(grayscale_img)
     normal_map = np.zeros(img.shape)
 
     # find gradients in x directions and y directions
@@ -55,7 +56,7 @@ def create_normal_map(img):
 
         #print(normal_map[i][j])
 
-    cv2.imwrite('normal.png', normal_map)
+    cv2.imwrite(str(sys.argv[1])+'_normal.png', normal_map)
     return normal_map
 
 if __name__ == '__main__':
