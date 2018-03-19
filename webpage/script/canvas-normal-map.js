@@ -1,3 +1,11 @@
+requirejs.config({
+    //By default load any module IDs from js/lib
+    baseUrl: '../node_modules',
+});
+
+
+function createNormalMap() {
+
 var moduleName = 'python-shell';
 require([moduleName], function(PythonShell){
     var canvas = document.getElementById('drawingCanvas');
@@ -19,4 +27,4 @@ require([moduleName], function(PythonShell){
 })
 
 //var PythonShell = require('python-shell');
-
+};

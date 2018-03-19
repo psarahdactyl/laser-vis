@@ -1,7 +1,7 @@
 // canvas settings
 var viewWidth = 512,
     viewHeight = 512,
-    drawingCanvas = document.getElementById("renderCanvas"),
+    renderCanvas = document.getElementById("renderCanvas"),
     ctx,
     timeStep = (1/60),
     time = 0;
@@ -26,11 +26,11 @@ var pointLight = {
     r:1,
     g:1,
     b:1,
-    a:1,
+    a:0.5,
     // position
     x:0,
     y:0,
-    z:64,
+    z:200,
     // attenuation
     // this reduces the light luminance based on distance
     radius:256,
@@ -42,9 +42,9 @@ var pointLight = {
 };
 
 function initDrawingCanvas() {
-    drawingCanvas.width = viewWidth;
-    drawingCanvas.height = viewHeight;
-    ctx = drawingCanvas.getContext('2d');
+    renderCanvas.width = viewWidth;
+    renderCanvas.height = viewHeight;
+    ctx = renderCanvas.getContext('2d');
 }
 
 function initTextures() {
@@ -216,9 +216,9 @@ function initGUI() {
 getMousePosition = function() {
     var mouseX,
         mouseY,
-        rect = drawingCanvas.getBoundingClientRect();
+        rect = renderCanvas.getBoundingClientRect();
 
-    drawingCanvas.addEventListener('mousemove', function(e) {
+    renderCanvas.addEventListener('mousemove', function(e) {
         mouseX = event.clientX - rect.left;
         mouseY = event.clientY - rect.top;
     });
@@ -243,9 +243,11 @@ function imageLoadedHandler() {
     }
 }
 
+var canvas = document.getElementById('drawingCanvas');
+var dataURL = canvas.toDataURL();
 texture_img.crossOrigin = "Anonymous";
 texture_img.onload = imageLoadedHandler;
-texture_img.src = "../img/test1.jpg";
+texture_img.src = "../img/Birch-Plywood-Cut.jpg";//dataURL;//
 texture_normal_img.crossOrigin = "Anonymous";
 texture_normal_img.onload = imageLoadedHandler;
-texture_normal_img.src = texture_img.src+"_normal.png";
+texture_normal_img.src = texture_img.src+"_normal.png";//createNormalMap();//

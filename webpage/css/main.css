@@ -48,17 +48,24 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+#fine-uploader-gallery {
+	float:left;
+	width:20%;
+	height:100% !important;
+}
+
 #drawingCanvas {
 	float: right;
-	width: 80% !important;
-    height: 100% !important;
-	background:url(../img/wood.jpg);
+	width: 80%;
+    height: 512;
+	background:url(../img/Birch-Plywood.jpg);
 }
 
 #renderCanvas {
 	float: right;
-	width: 80% !important;
-    height: 100% !important;
+	width: 80%;
+    height: 512;
 }
 
 canvas {
@@ -68,7 +75,8 @@ canvas {
 }
 
 .workspace {
-    position: relative;
+    position: absolute;
+    top: 0;
     width: 80%;
     height: 100%;
 }
@@ -77,12 +85,6 @@ canvas {
     position: absolute;
     top: 0;
     right: 0;
-}
-
-#panel {
-	float:left !important;
-	width:20% !important;
-	height:100% !important;
 }
 
 #trigger-upload {

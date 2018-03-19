@@ -62,14 +62,8 @@ function onMouseDown(event) {
 		//console.log(event.modifiers);
 		path = new Path({
 			segments: [event.point],
-			strokeColor: {
-				gradient: {
-					stops: ['#351909', '#3D2C1E', '#5C3B22', '#553C2B', '#A88B6F']
-				},
-				origin: view.center - [0,80] ,
-				destination: view.center + [0,80]
-			},
-			strokeWidth: 2,
+			strokeColor: '#351909',
+			strokeWidth: 5,
 			// Select the path, so we can see its segment points:
 			fullySelected: true
 		}); 
@@ -147,5 +141,21 @@ function onMouseUp(event) {
 	} 
 	if(selectionRectangle)
         selectionRectangle.selected = true;
+
+    var capture = project.exportSVG();
+
+    THREE.SVGLoader = function ( manager ) {
+		this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
+	};
+
+	THREE.SVGLoader.prototype = {
+		constructor: THREE.SVGLoader,
+		load: function ( url, onLoad, onProgress, onError ) {
+			var scope = this;
+			var parser = new DOMParser();
+			var loader = new THREE.FileLoader( scope.manager );
+			loader.load( capture );
+		}
+	};
 
 }
