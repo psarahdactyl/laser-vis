@@ -48,11 +48,35 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-#mainCanvas {
-	float:right;
+#drawingCanvas {
+	float: right;
 	width: 80% !important;
-	height:10 0% !important;
+    height: 100% !important;
 	background:url(../img/wood.jpg);
+}
+
+#renderCanvas {
+	float: right;
+	width: 80% !important;
+    height: 100% !important;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.workspace {
+    position: relative;
+    width: 80%;
+    height: 100%;
+}
+
+.workspace canvas {
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 #panel {

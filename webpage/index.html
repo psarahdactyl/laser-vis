@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <link href="css/main.css" rel="stylesheet" type="text/css">
 
+    <!-- Load RequireJS -->
+    <!--<script src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>>-->
+
     <!-- Load JQuery -->
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 
@@ -12,39 +15,34 @@
     <script type="text/javascript" src="node_modules/paper/dist/paper-full.js"></script>
 
      <!-- Load the Three.js library -->
-    <script src="http://mrdoob.github.com/three.js/build/three.min.js"></script>
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+    <script type="text/javascript" src="script/three.min.js"></script>
+     <!-- Load the lightweight Three.js GUI library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
 
     <!-- My Scripts -->
-    <script type="text/javascript" src="script/texture.js"></script>
-    <script type="text/javascript" src="script/normal/normalMap.js"></script>
-
     
+    <!--<script type="text/javascript" src="script/canvas-normal-map.js"></script>-->
 
-
-    
     <!-- Load external PaperScript and associate it with myCanvas -->
-    <script type="text/paperscript" src="script/draw.js" canvas="mainCanvas"></script>
+    <script type="text/paperscript" src="script/draw.js" canvas="drawingCanvas"></script>
 
-    <!-- Fine Uploader Gallery CSS file
-    ====================================================================== -->
+    <!-- Fine Uploader Gallery CSS file -->
     <link href="node_modules/fine-uploader/all.fine-uploader/fine-uploader-gallery.min.css" rel="stylesheet" type="text/css">
 
-    <!-- Fine Uploader JS file
-    ====================================================================== -->
+    <!-- Fine Uploader JS file -->
     <script type="text/javascript" src="node_modules/fine-uploader/all.fine-uploader/all.fine-uploader.min.js"></script>
-
-    <!-- Fine Uploader Gallery template
-    ====================================================================== -->
 
 
   </head>
 <body>
     <div id="workspace">
-    <canvas id="mainCanvas">
+        <!--
+    <canvas id="drawingCanvas">
      Your browser does not support the HTML5 canvas tag.
-    </canvas>
+    </canvas>-->
+
+    <canvas id="renderCanvas"></canvas>
+
     </div>
 
 
@@ -130,9 +128,9 @@
     </script>
     </div>
     <script type="text/javascript" src="script/uploader.js" div="uploader"></script>
+    <script type="text/javascript" src="script/test.js"></script>
 
-
-    <script type="text/paperscript" src="script/import.js" canvas="mainCanvas"></script>
+    <script type="text/paperscript" src="script/import.js" canvas="drawingCanvas"></script>
  
 </body>
 </html>
