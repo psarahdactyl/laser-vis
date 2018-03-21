@@ -51,21 +51,24 @@ table {
 
 #fine-uploader-gallery {
 	float:left;
-	width:20%;
-	height:100% !important;
+	left:0;
+	width:15% !important;
+	height:50% !important;
 }
 
 #drawingCanvas {
-	float: right;
-	width: 80%;
-    height: 512;
-	background:url(../img/Birch-Plywood.jpg);
+	float: left;
+	width: 80% !important;
+    height: 90%;
+    opacity: 0.0;
+	/*background:url(../img/Birch-Plywood.jpg);*/
 }
 
 #renderCanvas {
-	float: right;
-	width: 80%;
-    height: 512;
+	float: left;
+	width: 80% !important;
+    height: 90% !important;
+    opacity: 1;
 }
 
 canvas {

@@ -12,6 +12,7 @@ def create_normal_map(img):
     blur_img = cv2.GaussianBlur(img,(3,3),0)
 
     grayscale_img = cv2.cvtColor(blur_img, cv2.COLOR_BGR2GRAY)
+    cv2.imwrite(str(sys.argv[1])+'_displacement.png', grayscale_img)
     grayscale_img = cv2.bitwise_not(grayscale_img)
     normal_map = np.zeros(img.shape)
 
