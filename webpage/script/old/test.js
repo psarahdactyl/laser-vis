@@ -1,5 +1,6 @@
 // canvas settings
 var renderCanvas = document.getElementById("renderCanvas"),
+    drawingCanvas = document.getElementById("drawingCanvas"),
     viewWidth = renderCanvas.clientWidth,
     viewHeight = renderCanvas.clientHeight,
     ctx,
@@ -8,13 +9,13 @@ var renderCanvas = document.getElementById("renderCanvas"),
 
 
 function initCamera() {
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 500, 10000 );
+	isSketching = false;
+
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 100, 10000 );
     camera.position.set( 0, 0, 2500 );
     
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xf0f0f0 );
-
-    var drawingCanvas = document.getElementById("drawingCanvas");
 
     // instantiate a loader
     var loader = new THREE.TextureLoader();
@@ -37,7 +38,7 @@ function initCamera() {
         specular: 15
      } );
 
-    plane = new THREE.Mesh(new THREE.BoxGeometry(viewHeight, viewWidth,1, 80, 80,1), material);
+    plane = new THREE.Mesh(new THREE.BoxGeometry(viewHeight, viewWidth, 1, 100, 100, 1), material);
     plane.material.needsUpdate = true; // update material
     plane.receiveShadow = true;
     
@@ -60,8 +61,8 @@ function initCamera() {
     renderer.shadowMapHeight = 1024;
     renderer.render(scene, camera);
 
-    var orbit = new THREE.OrbitControls( camera, renderer.domElement );
-    orbit.enableZoom = true;
+    orbit = new THREE.OrbitControls( camera, renderer.domElement );
+    //orbit.enableZoom = true;
 
     lights = [];
     lights[ 0 ] = new THREE.DirectionalLight( 0xffffff, 1 );
@@ -100,9 +101,35 @@ function loop() {
     requestAnimationFrame(loop);
 }
 
+function swapCanvases(){
+	if (drawingCanvas.style.visibility=='visible') {
+		drawingCanvas.style.visibility='hidden';
+		renderCanvas.style.visibility='visible';
+	} else {
+		drawingCanvas.style.visibility='visible';
+		renderCanvas.style.visibility='hidden';
+	}
+}
+
 function sketch()
 {
-    orbit.reset();
+	isSketching = !isSketching;
+
+	if (isSketching) {
+	    orbit.reset();
+	    orbit.minPolarAngle = Math.PI/2;
+		orbit.maxPolarAngle = Math.PI/2;
+		orbit.minAzimuthAngle = 0;
+		orbit.maxAzimuthAngle = 0;
+	} else {
+		orbit.minPolarAngle = 0;
+		orbit.maxPolarAngle = Math.PI;
+		orbit.minAzimuthAngle = - Infinity;
+		orbit.maxAzimuthAngle = Infinity;
+	}
+
+	swapCanvases();
+
 }
 
 function update() {
@@ -165,11 +192,11 @@ function initGUI() {
         z: 1500
     };
     var pointFolder = gui.addFolder('point light');
-    pointFolder.add(pointParams, 'r', 0, 1).name('red').onChange( function( value ) { pointLight.color[0] = value; } );;
-    pointFolder.add(pointParams, 'g', 0, 1).name('green').onChange( function( value ) { pointLight.color[1] = value; } );;
-    pointFolder.add(pointParams, 'b', 0, 1).name('blue').onChange( function( value ) { pointLight.color[2] = value; } );;
-    pointFolder.add(pointParams, 'intensity', 0, 1).name('intensity').onChange( function( value ) { pointLight.intensity = value; } );;
-    pointFolder.add(pointParams, 'z', 0, 1500).name('distance').onChange( function( value ) { pointLight.position[2] = value; } );;
+    pointFolder.add(pointParams, 'r', 0, 1).name('red').onChange( function( value ) { pointLight.color[0] = value; } );
+    pointFolder.add(pointParams, 'g', 0, 1).name('green').onChange( function( value ) { pointLight.color[1] = value; } );
+    pointFolder.add(pointParams, 'b', 0, 1).name('blue').onChange( function( value ) { pointLight.color[2] = value; } );
+    pointFolder.add(pointParams, 'intensity', 0, 1).name('intensity').onChange( function( value ) { pointLight.intensity = value; } );
+    pointFolder.add(pointParams, 'z', 0, 1500).name('distance').onChange( function( value ) { pointLight.position[2] = value; } );
 
     gui.add(window, 'followMouse').name('follow mouse');
 
