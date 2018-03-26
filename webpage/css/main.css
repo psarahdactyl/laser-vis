@@ -56,22 +56,6 @@ table {
 	height:50% !important;
 }
 
-#drawingCanvas {
-	float: left;
-	width: 80% !important;
-    height: 90%;
-    opacity: 0.0;
-	/*background:url(../img/Birch-Plywood.jpg);*/
-}
-
-#renderCanvas {
-	float: left;
-	width: 80% !important;
-    height: 90% !important;
-    opacity: 1;
-}
-
-
 canvas {
     position: absolute;
     top: 0;

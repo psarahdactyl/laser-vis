@@ -59,7 +59,7 @@ function onMouseDown(event) {
 
 	if (event.modifiers.shift) {
 		activePath = null;
-		//console.log(event.modifiers);
+		console.log('drawing line');
 		path = new Path({
 			segments: [event.point],
 			strokeColor: '#351909',
@@ -129,6 +129,14 @@ function onMouseDrag(event) {
 	}
 }
 
+function onKeyDown(event) {
+	 if((event.key == 'delete') && path) {
+        path.remove();
+        if (selectionRectangle)
+        	selectionRectangle.remove();
+     }  
+}
+
 function onMouseUp(event) {
 	if(path) {
 		//path.simplify(7);
@@ -139,8 +147,12 @@ function onMouseUp(event) {
 		//activePath.simplify(2);
 		activePath.smooth();
 	} 
-	if(selectionRectangle)
+	if(selectionRectangle) {
         selectionRectangle.selected = true;
+
+	}
+
+
 
     var capture = project.exportSVG();
 
