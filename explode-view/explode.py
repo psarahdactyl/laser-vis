@@ -49,25 +49,51 @@ def get_labeled_img(connected_comps):
     for i in range(num_labels):
         nodes[i] = labeled_img[label_hue==i]
 
-    ret = (nodes,labels,labeled_img)
+    largest_label = 1 + np.argmax(stats[1:, cv2.CC_STAT_AREA])
+    #print(largest_label)
+
+    ret = (nodes,labels,labeled_img,largest_label)
 
     return ret
 
+def fill_components(nodes, labels, labeled_img, largest_label):
+    graph = dict()
+    label_nums = list(nodes.keys())
+
+    #label_nums.remove(largest_label)
+
+    while label_nums:
+        for i,label in enumerate(label_nums):
+            mask_i = np.uint8(labels==label_nums[i])
+            mask_i = np.pad(mask_i, (1,1), 'constant', constant_values=(0))
+            cv2.floodFill(labeled_img, mask_i, (0,0), (255,255,255), flags=8)
+            cv2.imshow('helop', labeled_img)
+            cv2.waitKey(0)
+
+
 def make_levels(label_nums, labels, graph):
     level_num = len(graph.keys())
-    background_mask = sum(graph[l] for l in graph.keys())
     mask_0 = np.uint8(labels==0)
+    background_mask = sum(graph[l] for l in graph.keys())
+    #background_mask = graph[level_num-1]
+    
     graph[level_num] = np.zeros_like(mask_0)
 
     for i,label in enumerate(label_nums):
-        #print(i)
-
         mask_i = np.uint8(labels==label_nums[i])
-        
-        new_mask = background_mask+mask_i-mask_0
 
         kernel = np.ones((3,3),np.uint8)
+        new_mask = background_mask+mask_i-mask_0
         new_mask = cv2.dilate(new_mask, kernel, iterations=2)
+
+
+        label_hue = np.uint8(179*new_mask/np.max(new_mask))
+        blank_ch = 255*np.ones_like(label_hue)
+        labeled_img = cv2.merge([label_hue, blank_ch, blank_ch])
+        labeled_img = cv2.cvtColor(labeled_img, cv2.COLOR_HSV2BGR)
+        labeled_img[label_hue==0] = 0
+        #cv2.imshow('helop', labeled_img)
+        #cv2.waitKey(0)
 
         ret, thresh = cv2.threshold(new_mask,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
         output = cv2.connectedComponentsWithStats(thresh, 8, cv2.CV_32S)
@@ -77,16 +103,18 @@ def make_levels(label_nums, labels, graph):
             graph[level_num] += mask_i
             label_nums.remove(label)
 
-def organize_components(nodes, labels, labeled_img):
-    background_mask = np.uint8(labels==0)
+def organize_components(nodes, labels, labeled_img, largest_label):
+    #background_mask = np.uint8(labels==largest_label)
 
     graph = dict()
-    graph[0] = background_mask
+    graph[largest_label] = background_mask
+    #background_mask = np.uint8(labels==0)
+    graph[largest_label] = background_mask
     # graph will have form
     # { level number : comp0 + comp1 + comp2 + ...] }
 
     label_nums = list(nodes.keys())
-    label_nums.remove(0)
+    label_nums.remove(largest_label)
 
     while label_nums:
         make_levels(label_nums, labels, graph)
@@ -127,9 +155,10 @@ if __name__ == '__main__':
     img = cv2.imread('a.png')
     output = get_components(img)
     print('connected components got')
-    nodes, labels, labeled_img = get_labeled_img(output)
+    nodes, labels, labeled_img, largest_label = get_labeled_img(output)
     print('labels got')
-    components = organize_components(nodes, labels, labeled_img)
-    print('levels got')
-    combine_components(components)
-    print('combined conmponents got')
+    #components = organize_components(nodes, labels, labeled_img, largest_label)
+    #print('levels got')
+    #combine_components(components)
+    #print('combined conmponents got')
+    fill_components(nodes, labels, labeled_img, largest_label)
