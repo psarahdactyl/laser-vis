@@ -60,11 +60,11 @@ def get_labeled_img(connected_comps):
 def combine_components(components):
     even = np.zeros_like(components[0])
     odd = np.zeros_like(components[0])
-    for i,comp in enumerate(components):
+    for i in components.keys():
         if i % 2 == 0:
-            even += comp
+            even += components[i]
         else:
-            odd += comp
+            odd += components[i]
 
     cv2.imwrite('odd_components.png', odd)
     cv2.imwrite('even_components.png', even)
@@ -87,38 +87,49 @@ def flood_fill(img):
 
     h,w,c = img.shape
 
-    components = list()
-    #components.append(img_thresh)
+    #components = list()
+    components = dict()
+    #components[0] = img_thresh
 
     i = 0
+    layer = 0
     target = (0,0)
     mask = np.zeros((h+2, w+2), np.uint8)
 
     while not(np.count_nonzero(img_thresh) == 0):
+        new_mask = np.zeros((h+2, w+2), np.uint8)
+
         if target:
             old_thresh = img_thresh.copy()
-            cv2.floodFill(img_thresh, mask, target, (0,0,0))#, flags=8|cv2.FLOODFILL_FIXED_RANGE)
 
-            if target[0] < w/2 and target[1] < h/2:
-                new_target = (0,0)
-            elif target[0] < w/2 and target[1] > h/2:
-                new_target = (0,h)
-            elif target[0] > w/2 and target[1] < h/2:
-                new_target = (w,0)
-            else:
-                new_target = (w,h)
+            img_test = img_thresh.copy()
+            cv2.floodFill(img_test, new_mask, (0,0), 255)
+            img_test = cv2.bitwise_not(img_test)
 
-            target = find_nearest_white(img_thresh, new_target)
+            cv2.floodFill(img_thresh, mask, target, 0)#, flags=8|cv2.FLOODFILL_FIXED_RANGE)
+
+            target = find_nearest_white(img_thresh, (0,0))
             #cv2.imwrite('step'+str(i)+'.png', img_thresh)
 
-            #cv2.imshow('new', img_thresh)
-            #cv2.imshow('old', old_thresh)
-            #cv2.waitKey(0)
-
             component = cv2.absdiff(img_thresh,old_thresh)
-            #cv2.imwrite('comp'+str(i)+'.png', component)
-            components.append(component)
+
+            #cv2.imshow('test'+str(i)+'.png', img_test)
+            #cv2.waitKey(0)
+            #cv2.destroyAllWindows()
+            #components.append(component)
+            print(layer)
+            if not layer in components:
+                components[layer] = np.zeros_like(img_thresh)
+
+            if np.count_nonzero(img_test) == 0:
+                components[layer] += component
+            else:
+                components[layer] += component
+                layer += 1
+
+
             i += 1
+    #print(components)
 
     print('out of loop')
     return components
