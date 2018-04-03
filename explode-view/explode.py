@@ -106,8 +106,7 @@ def flood_fill(img):
             cv2.floodFill(img_test, new_mask, (0,0), 255)
             img_test = cv2.bitwise_not(img_test)
 
-            cv2.floodFill(img_thresh, mask, target, 0)#, flags=8|cv2.FLOODFILL_FIXED_RANGE)
-
+            cv2.floodFill(img_thresh, mask, target, 0)
             target = find_nearest_white(img_thresh, (0,0))
             #cv2.imwrite('step'+str(i)+'.png', img_thresh)
 
@@ -137,7 +136,7 @@ def flood_fill(img):
 
 if __name__ == '__main__':
     # Read the image you want connected components of
-    img = cv2.imread('a.png')
+    img = cv2.imread('jellybeanboom.png')
     #output = get_components(img)
     #nodes, labels, labeled_img, largest_label = get_labeled_img(output)
 
