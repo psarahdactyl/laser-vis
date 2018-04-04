@@ -24,10 +24,12 @@ function initCamera() {
     var texture = loader.load(
         // resource URL
         /*drawingCanvas.dataURL()*/
-        "../img/Birch-Plywood-Cut.jpg");
+        "../img/Birch-Plywood-A.png");
 
-    var normal = loader.load("../img/Birch-Plywood-Cut.jpg_normal.png");
-    var displacement = loader.load("../img/Birch-Plywood-Cut.jpg_displacement.png");
+    var normal = loader.load("../img/Birch-Plywood-A.png_displacement.png");
+    var displacement = loader.load("../img/Birch-Plywood-A.png_normal.png");
+    var alpha_odd = loader.load("../img/odd_components.png");
+    var alpha_even = loader.load("../img/even_components.png");
         
     var material = new THREE.MeshPhongMaterial( {
         map: texture,
@@ -35,6 +37,7 @@ function initCamera() {
         displacementMap: displacement,
         displacementScale: 10,
         displacementBias: -0.5,
+        alphaMap: alpha_odd,
         specular: 15
      } );
 
