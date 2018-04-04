@@ -24,7 +24,7 @@ function initCamera() {
     var texture = loader.load(
         // resource URL
         /*drawingCanvas.dataURL()*/
-        "../img/Birch-Plywood-A.png");
+        "../img/Birch-Plywood.jpg");
 
     var normal = loader.load("../img/Birch-Plywood-A.png_displacement.png");
     var displacement = loader.load("../img/Birch-Plywood-A.png_normal.png");
@@ -37,11 +37,11 @@ function initCamera() {
         displacementMap: displacement,
         displacementScale: 10,
         displacementBias: -0.5,
-        alphaMap: alpha_odd,
+        //alphaMap: alpha_even,
         specular: 15
      } );
 
-    plane = new THREE.Mesh(new THREE.BoxGeometry(viewHeight, viewWidth, 1, 100, 100, 1), material);
+    plane = new THREE.Mesh(new THREE.BoxGeometry(viewHeight/2, viewWidth/2, 1, 100, 100, 1), material);
     plane.material.needsUpdate = true; // update material
     plane.receiveShadow = true;
     
