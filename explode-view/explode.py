@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import copy
 from collections import defaultdict
 
 def get_components(src):
@@ -60,7 +61,8 @@ def get_labeled_img(connected_comps):
 def combine_components(components):
     even = np.zeros_like(components[0])
     odd = np.zeros_like(components[0])
-    for i in components.keys():
+    keys = components.keys()
+    for i in sorted(keys, reverse=True):
         if i % 2 == 0:
             even += components[i]
         else:
@@ -78,7 +80,35 @@ def find_nearest_white(img, target):
         return tuple(nonzero[nearest_index][0])
     else:
         return None
+
+def find_nearest_black(img, target):
+    zero_rows, zero_cols = np.where(img == 0)
+    zero = np.dstack((zero_cols, zero_rows))
+    zero = zero.reshape(zero.shape[1],zero.shape[0],zero.shape[2])
+    if zero is not None:
+        distances = np.sqrt((zero[:,:,0] - target[0]) ** 2 + (zero[:,:,1] - target[1]) ** 2)
+        if distances.size is not 0:
+            nearest_index = np.argmin(distances)
+            return tuple(zero[nearest_index][0])
+        else:
+            return None
+    else:
+        return None
         
+def is_all_white(img):
+    all_white = np.zeros_like(img)
+    all_white[:] = 255
+    if np.array_equal(img, all_white): # if the whole image is white
+        return True
+    else:
+        return False
+
+def is_all_black(img):
+    if np.count_nonzero(img) == 0: # if the whole image is black
+        return True
+    else:
+        return False
+
 
 def flood_fill(img):
     img_bw = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -92,9 +122,7 @@ def flood_fill(img):
     #components[0] = img_thresh
 
     i = 0
-    layer = 0
     target = (0,0)
-    mask = np.zeros((h+2, w+2), np.uint8)
 
     while not(np.count_nonzero(img_thresh) == 0):
         new_mask = np.zeros((h+2, w+2), np.uint8)
@@ -102,41 +130,45 @@ def flood_fill(img):
         if target:
             old_thresh = img_thresh.copy()
 
-            img_test = img_thresh.copy()
-            cv2.floodFill(img_test, new_mask, (0,0), 255)
-            img_test = cv2.bitwise_not(img_test)
-
-            cv2.floodFill(img_thresh, mask, target, 0)
-            target = find_nearest_white(img_thresh, (0,0))
-            #cv2.imwrite('step'+str(i)+'.png', img_thresh)
-
-            component = cv2.absdiff(img_thresh,old_thresh)
-
-            #cv2.imshow('test'+str(i)+'.png', img_test)
-            #cv2.waitKey(0)
-            #cv2.destroyAllWindows()
-            #components.append(component)
-            print(layer)
-            if not layer in components:
-                components[layer] = np.zeros_like(img_thresh)
-
-            if np.count_nonzero(img_test) == 0:
-                components[layer] += component
+            if i % 2 == 0:
+                print('filling with black')
+                cv2.floodFill(img_thresh, new_mask, (0,0), 0)
+                component = cv2.absdiff(img_thresh,old_thresh)
+                #component = img_thresh
+                #img_thresh -= sum(components.values())
+                if not(is_all_black(component)) and not(is_all_white(component)):
+                    in_list = np.all(component == components.values()).any()
+                    if not(in_list):
+                        cv2.imshow('comp', component)
+                        cv2.waitKey(0)
+                        cv2.destroyAllWindows()
+                        components[i] = component
+                #target = find_nearest_white(img_thresh, (0,0))
             else:
-                components[layer] += component
-                layer += 1
+                print('filling with white')
+                cv2.floodFill(img_thresh, new_mask, (0,0), 255)
+                component = cv2.absdiff(img_thresh,cv2.bitwise_not(old_thresh))
+                #component = img_thresh
+                #img_thresh -= cv2.bitwise_not(sum(components.values()))
+                if not(is_all_black(component)) and not(is_all_white(component)):
+                    in_list = np.all(component == components.values()).any()
+                    if not(in_list):
+                        cv2.imshow('comp', component)
+                        cv2.waitKey(0)
+                        cv2.destroyAllWindows()
+                        components[i] = component
+                #target = find_nearest_black(img_thresh, (0,0))
 
 
+            cv2.imwrite('comp'+str(i)+'.png', img_thresh)
             i += 1
-    #print(components)
 
-    print('out of loop')
     return components
 
 
 if __name__ == '__main__':
     # Read the image you want connected components of
-    img = cv2.imread('jellybeanboom.png')
+    img = cv2.imread('test-explode-2.png')
     #output = get_components(img)
     #nodes, labels, labeled_img, largest_label = get_labeled_img(output)
 
