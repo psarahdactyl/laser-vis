@@ -71,7 +71,7 @@ def combine_components(components):
     cv2.imwrite('odd_components.png', odd)
     cv2.imwrite('even_components.png', even)
 
-
+'''
 def find_nearest_white(img, target):
     nonzero = cv2.findNonZero(img)
     if nonzero is not None:
@@ -94,7 +94,8 @@ def find_nearest_black(img, target):
             return None
     else:
         return None
-        
+'''
+
 def is_all_white(img):
     all_white = np.zeros_like(img)
     all_white[:] = 255
@@ -109,7 +110,6 @@ def is_all_black(img):
     else:
         return False
 
-
 def flood_fill(img):
     img_bw = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     img_thresh = cv2.threshold(img_bw,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)[1]
@@ -117,58 +117,41 @@ def flood_fill(img):
 
     h,w,c = img.shape
 
-    #components = list()
     components = dict()
-    #components[0] = img_thresh
 
     i = 0
     target = (0,0)
+    layer = 0
+    old_thresh = img_thresh.copy()
 
     while not(np.count_nonzero(img_thresh) == 0):
         new_mask = np.zeros((h+2, w+2), np.uint8)
 
-        if target:
-            old_thresh = img_thresh.copy()
-
-            if i % 2 == 0:
-                print('filling with black')
-                cv2.floodFill(img_thresh, new_mask, (0,0), 0)
-                component = cv2.absdiff(img_thresh,old_thresh)
-                #component = img_thresh
-                #img_thresh -= sum(components.values())
-                if not(is_all_black(component)) and not(is_all_white(component)):
-                    in_list = np.all(component == components.values()).any()
-                    if not(in_list):
-                        cv2.imshow('comp', component)
-                        cv2.waitKey(0)
-                        cv2.destroyAllWindows()
-                        components[i] = component
-                #target = find_nearest_white(img_thresh, (0,0))
-            else:
-                print('filling with white')
-                cv2.floodFill(img_thresh, new_mask, (0,0), 255)
-                component = cv2.absdiff(img_thresh,cv2.bitwise_not(old_thresh))
-                #component = img_thresh
-                #img_thresh -= cv2.bitwise_not(sum(components.values()))
-                if not(is_all_black(component)) and not(is_all_white(component)):
-                    in_list = np.all(component == components.values()).any()
-                    if not(in_list):
-                        cv2.imshow('comp', component)
-                        cv2.waitKey(0)
-                        cv2.destroyAllWindows()
-                        components[i] = component
-                #target = find_nearest_black(img_thresh, (0,0))
+        if i % 2 == 0:
+            #print('filling with black')
+            cv2.floodFill(img_thresh, new_mask, (0,0), 0)
+            component = cv2.absdiff(img_thresh,old_thresh)
+            if not(is_all_black(component)) and not(is_all_white(component)):
+                in_list = np.all(component == components.values()).any()
+                if not(in_list):
+                    old_thresh = img_thresh.copy()
+                    components[layer] = component
+                    #cv2.imwrite('comp'+str(i)+'.png', component)
+                    layer += 1
+        else:
+            #print('filling with white')
+            cv2.floodFill(img_thresh, new_mask, (0,0), 255)
 
 
-            cv2.imwrite('comp'+str(i)+'.png', img_thresh)
-            i += 1
+        
+        i += 1
 
     return components
 
 
 if __name__ == '__main__':
     # Read the image you want connected components of
-    img = cv2.imread('test-explode-2.png')
+    img = cv2.imread('a.png')
     #output = get_components(img)
     #nodes, labels, labeled_img, largest_label = get_labeled_img(output)
 
