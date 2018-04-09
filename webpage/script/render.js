@@ -40,6 +40,7 @@ function initCamera() {
         alphaMap: alpha_even,
         specular: 15
      } );
+    material.alphaTest = 0.5;
 
     plane = new THREE.Mesh(new THREE.BoxGeometry(viewWidth*.65, viewHeight, 1, 500, 500, 1), material);
     plane.material.needsUpdate = true; // update material
