@@ -19,8 +19,11 @@
 
     <!-- Load RequireJS -->
     <script src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>
-    <!-- <script data-main="script/canvas-normal-map.js" src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script> -->
+    <script data-main="script/canvas-normal-map.js" src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>
 
+    <!-- Load my classes -->
+    <script type="text/javascript" src="script/Action.js"></script>
+    <script type="text/javascript" src="script/Drawing.js"></script>
 
     <!-- Load JQuery -->
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
@@ -33,7 +36,7 @@
 
     <!-- Load external PaperScript and associate it with myCanvas -->
     <script type="text/paperscript" src="script/draw.js" canvas="drawingCanvas"></script>
-
+    <script type="text/javascript" src="script/render.js"></script>
 
 
 
@@ -59,7 +62,7 @@
                 <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
                     <span class="qq-upload-drop-area-text-selector"></span>
                 </div>
-                <div class="qq-upload-button-selector qq-upload-button">
+                <div class="button qq-upload-button-selector qq-upload-button">
                     <div>Upload a file</div>
                 </div>
                 <span class="qq-drop-processing-selector qq-drop-processing">
@@ -129,8 +132,27 @@
         </script>
         </div>
 
+        <div class="topButtons">
+            <div id="drawButton">
+                <button type="button" class="button">Draw View</button>
+            </div>
+            <div id="explodeButton">
+                <button type="button" class="button">Explode View</button>
+            </div>
+            <div id="fitButton">
+                <button type="button" class="button">Fit View</button>
+            </div>
+            <div id="calibrateButton">
+                <button type="button" class="button">Calibrate</button>
+            </div>
+            <div id="saveButton">
+                <button type="button" class="button">Save</button>
+            </div>
+        </div>
+        
+
         <script type="text/javascript" src="script/uploader.js" div="uploader"></script>
-        <script type="text/javascript" src="script/render.js"></script>
+        
 
         <!--<script type="text/paperscript" src="script/import.js" canvas="drawingCanvas"></script>-->
      </div>

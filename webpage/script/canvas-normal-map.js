@@ -13,7 +13,7 @@ require([moduleName], function(PythonShell){
 
 	var options = {
 	  mode: 'binary',
-	  pythonPath: '/python/',
+	  pythonPath: 'C:/Anaconda3/Scripts',
 	  scriptPath: '/python/',
 	  args: [dataURL]
 	};

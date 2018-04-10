@@ -1,3 +1,5 @@
+window.onload = function() {
+
 // canvas settings
 var renderCanvas = document.getElementById("renderCanvas"),
     drawingCanvas = document.getElementById("drawingCanvas"),
@@ -37,12 +39,12 @@ function initCamera() {
         displacementMap: displacement,
         displacementScale: 10,
         displacementBias: -0.5,
-        alphaMap: alpha_even,
+        //alphaMap: alpha_even,
         specular: 15
      } );
     material.alphaTest = 0.5;
 
-    plane = new THREE.Mesh(new THREE.BoxGeometry(viewWidth*.65, viewHeight, 1, 500, 500, 1), material);
+    plane = new THREE.Mesh(new THREE.BoxGeometry(viewWidth*.65, viewHeight, 1, 350, 350, 1), material);
     plane.material.needsUpdate = true; // update material
     plane.receiveShadow = true;
     
@@ -93,6 +95,64 @@ function initCamera() {
 
 } // end init
 
+document.getElementById("explodeButton").addEventListener ("click", explodeView, false);
+
+function explodeView() {
+    scene.remove( plane );
+
+    // instantiate a loader
+    var loader = new THREE.TextureLoader();
+
+    // load a resource
+    var texture = loader.load(
+        // resource URL
+        /*drawingCanvas.dataURL()*/
+        "../img/Birch-Plywood.jpg");
+
+    var normal = loader.load("../img/a_cut.png_normal.png");
+    var displacement = loader.load("../img/a_cut.png_displacement.png");
+    var alpha_odd = loader.load("../img/odd_components.png");
+    var alpha_even = loader.load("../img/even_components.png");
+        
+    var material_even = new THREE.MeshPhongMaterial( {
+        map: texture,
+        normalMap: normal,
+        displacementMap: displacement,
+        displacementScale: 10,
+        displacementBias: -0.5,
+        alphaMap: alpha_even,
+        specular: 15
+     } );
+    material_even.alphaTest = 0.5;
+
+    var material_odd = new THREE.MeshPhongMaterial( {
+        map: texture,
+        normalMap: normal,
+        displacementMap: displacement,
+        displacementScale: 10,
+        displacementBias: -0.5,
+        alphaMap: alpha_odd,
+        specular: 15
+     } );
+    material_odd.alphaTest = 0.5;
+
+    plane_even = new THREE.Mesh(new THREE.BoxGeometry(viewWidth*.65, viewHeight, 1, 10, 10, 1), material_even);
+    plane_even.material.needsUpdate = true; // update material
+    plane_even.receiveShadow = true;
+    
+    scene.add( plane_even );
+    plane_even.position.set(0,0,0);
+
+    plane_odd = new THREE.Mesh(new THREE.BoxGeometry(viewWidth*.65, viewHeight, 1, 300, 300, 1), material_odd);
+    plane_odd.material.needsUpdate = true; // update material
+    plane_odd.receiveShadow = true;
+    
+    scene.add( plane_odd );
+    //plane_odd.position.set(500,0,250);
+    plane_odd.position.set(1000,0,0);
+
+}
+
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -122,6 +182,8 @@ function swapCanvases() {
 		//renderCanvas.style.visibility='hidden';
 	}
 }
+
+document.getElementById("drawButton").addEventListener ("click", sketch, false);
 
 function sketch() {
 	isSketching = !isSketching;
@@ -235,3 +297,4 @@ initCamera();
 initGUI();
 requestAnimationFrame(loop);
 
+};

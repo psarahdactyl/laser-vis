@@ -68,6 +68,8 @@ def combine_components(components):
         else:
             odd += components[i]
 
+    kernel = np.ones((5,5),np.uint8)
+    odd = cv2.dilate(odd, kernel, iterations=1)
     cv2.imwrite('odd_components.png', odd)
     cv2.imwrite('even_components.png', even)
 
@@ -136,7 +138,7 @@ def flood_fill(img):
                 if not(in_list):
                     old_thresh = img_thresh.copy()
                     components[layer] = component
-                    #cv2.imwrite('comp'+str(i)+'.png', component)
+                    cv2.imwrite('comp'+str(i)+'.png', component)
                     layer += 1
         else:
             #print('filling with white')

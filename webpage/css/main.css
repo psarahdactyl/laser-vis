@@ -30,7 +30,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
-	background-color: lightgrey;
+	background-color: lightgrey;/*#f0f0f0*/
 
 }
 ol, ul {
@@ -49,6 +49,19 @@ table {
 	border-spacing: 0;
 }
 
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
 #fine-uploader-gallery {
 	float:left;
 	left:0;
@@ -58,7 +71,7 @@ table {
 
 canvas {
     position: absolute;
-    top: 0;
+    top: 55px;
     right: 0;
 }
 
@@ -72,7 +85,7 @@ canvas {
 #drawingCanvas {
 	position: absolute;
 	float: left;
-	width: 80% !important;
+	width: 85% !important;
     height: 90% !important;
     z-index: 10;
 	/*background:url(../img/Birch-Plywood.jpg);*/
@@ -81,17 +94,22 @@ canvas {
 #renderCanvas {
 	position: absolute;
 	float: left;
-	width: 80% !important;
+	width: 85% !important;
     height: 90% !important;
     z-index: 8;
 }
 
 #trigger-upload {
+    background-color: #4CAF50;
+    border: none;
     color: white;
-    background-color: #00ABC7;
-    font-size: 14px;
-    padding: 7px 20px;
-    background-image: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
 }
 
 #fine-uploader-manual-trigger .qq-upload-button {
@@ -104,4 +122,12 @@ canvas {
 
 #fine-uploader-manual-trigger .qq-uploader .qq-total-progress-bar-container {
     width: 60%;
+}
+
+.topButtons {
+	float: left;
+	float: top;
+	border: solid 1px blue;
+	height: 55px;
+	width:85% !important;
 }

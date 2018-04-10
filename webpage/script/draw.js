@@ -1,5 +1,6 @@
-var segment, path, activePath, selectionRectangle;
+var hitSegment, path, activePath, selectionRectangle;
 var movePath = false;
+var drawing = null;
 
 var hitOptions = {
 	segments: true,
@@ -51,8 +52,11 @@ function initSelectionRectangle(shape) {
 }
 
 function onMouseDown(event) {
-	segment = null;
+	hitSegment = null;
 	var hitResult = project.hitTest(event.point, hitOptions);
+
+	if(!drawing)
+		drawing = new Drawing([]);
 
 	if(path)
 		path.selected = false;
@@ -68,6 +72,7 @@ function onMouseDown(event) {
 			fullySelected: true
 		}); 
 		path.simplify(7);
+		drawing.addToDrawing(path);
 	}
 
 	if (hitResult) {
@@ -77,22 +82,22 @@ function onMouseDown(event) {
 			activePath = hitResult.item;
 		activePath.fullySelected = true;
 		if (hitResult.type == 'segment') {
-			segment = hitResult.segment;
+			hitSegment = hitResult.segment;
 			initSelectionRectangle(activePath);
 		} else if (hitResult.type == 'stroke') {
 			var location = hitResult.location;
-			segment = activePath;//.insert(location.index + 1, event.point);
+			hitSegment = activePath;//.insert(location.index + 1, event.point);
 			initSelectionRectangle(activePath);
 		} else if (hitResult.type == 'bounds') {
 			var location = hitResult.location;
 			console.log(hitResult.bounds);
-			segment = hitResult.bounds;
+			hitSegment = hitResult.bounds;
 
 		}
 		project.activeLayer.addChild(hitResult.item);
 
 	} else {
-		segment = null;
+		hitSegment = null;
 		console.log('nothing hit');
 		if (activePath) {
 			activePath.selected = false;
@@ -120,8 +125,8 @@ function onMouseDrag(event) {
 		path.add(event.point);
 	}
 	
-	if (segment) {
-		segment.point += event.delta;
+	if (hitSegment) {
+		hitSegment.point += event.delta;
 		//activePath.smooth();
 	} else if (activePath) {
 		activePath.position += event.delta;
@@ -131,16 +136,21 @@ function onMouseDrag(event) {
 
 function onKeyDown(event) {
 	 if((event.key == 'delete') && path) {
+	 	drawing.deleteFromDrawing(path);
         path.remove();
         if (selectionRectangle)
         	selectionRectangle.remove();
-     }  
+     }
+     else if(event.key == 'control' && event.character == 'z') {
+     	drawing.deleteFromHistory(drawing.getLastAction());
+     }
 }
 
 function onMouseUp(event) {
 	if(path) {
 		//path.simplify(7);
 		path.smooth();
+
 	}
 	if (activePath) {
 		activePath.fullySelected = true;
