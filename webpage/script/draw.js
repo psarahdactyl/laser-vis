@@ -83,10 +83,12 @@ function onMouseDown(event) {
 		activePath.fullySelected = true;
 		if (hitResult.type == 'segment') {
 			hitSegment = hitResult.segment;
+			activePath = hitSegment;
 			initSelectionRectangle(activePath);
 		} else if (hitResult.type == 'stroke') {
 			var location = hitResult.location;
 			hitSegment = activePath;//.insert(location.index + 1, event.point);
+			activePath = hitSegment;
 			initSelectionRectangle(activePath);
 		} else if (hitResult.type == 'bounds') {
 			var location = hitResult.location;
@@ -135,9 +137,9 @@ function onMouseDrag(event) {
 }
 
 function onKeyDown(event) {
-	 if((event.key == 'delete') && path) {
-	 	drawing.deleteFromDrawing(path);
-        path.remove();
+	 if((event.key == 'delete') && activePath) {
+	 	drawing.deleteFromDrawing(activePath);
+        activePath.remove();
         if (selectionRectangle)
         	selectionRectangle.remove();
      }

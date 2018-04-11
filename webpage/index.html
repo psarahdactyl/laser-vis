@@ -8,6 +8,9 @@
     <!-- Fine Uploader Gallery CSS file -->
     <link href="node_modules/fine-uploader/all.fine-uploader/fine-uploader-gallery.min.css" rel="stylesheet" type="text/css">
 
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css?family=Kanit|Ropa+Sans" rel="stylesheet">
+
     <!-- Fine Uploader JS file -->
     <script type="text/javascript" src="node_modules/fine-uploader/all.fine-uploader/all.fine-uploader.min.js"></script>
 
@@ -31,29 +34,29 @@
     <!-- Load the Paper.js library -->
     <script type="text/javascript" src="node_modules/paper/dist/paper-full.js"></script>
 
-    <!-- My Scripts -->
-    <!-- <script type="text/javascript" src="script/canvas-normal-map.js"></script> -->
-
     <!-- Load external PaperScript and associate it with myCanvas -->
     <script type="text/paperscript" src="script/draw.js" canvas="drawingCanvas"></script>
+    
+    <!-- My Scripts -->
+    <!-- <script type="text/javascript" src="script/canvas-normal-map.js"></script> -->
     <script type="text/javascript" src="script/render.js"></script>
-
+    <!-- <script type="text/javascript" src="script/ui.js"></script> -->
 
 
   </head>
 <body>
-    <div id="laser">
 
-        <div id="workspace"> 
-        <canvas id="renderCanvas"></canvas>
-        <canvas id="drawingCanvas"></canvas>
+    <div id="workspace"> 
+        <div class="interface">
+        <div class="title">
+            <p>LASERVIS</p>
         </div>
 
 
-        <div id="fine-uploader-gallery"></div>
+        
+        <!-- <div id="fine-uploader-gallery"></div>
 
 
-        <div class="panel">
         <script type="text/template" id="qq-template-gallery">
             <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here">
                 <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
@@ -62,8 +65,8 @@
                 <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
                     <span class="qq-upload-drop-area-text-selector"></span>
                 </div>
-                <div class="button qq-upload-button-selector qq-upload-button">
-                    <div>Upload a file</div>
+                <div class="qq-upload-button-selector qq-upload-button">
+                    <div>Upload a File</div>
                 </div>
                 <span class="qq-drop-processing-selector qq-drop-processing">
                     <span>Processing dropped files...</span>
@@ -129,29 +132,39 @@
                     </div>
                 </dialog>
             </div>
-        </script>
-        </div>
+        </script> -->
 
         <div class="topButtons">
-            <div id="drawButton">
-                <button type="button" class="button">Draw View</button>
+            <div id="cutOptions" class="dropdown">
+                <button type="button" class="dropbtn buttons">CUT</button>
+                  <div id="drawDropdown" class="dropdown-content">
+                    <button type="button" id="designButton" class="dropdownButtons">DESIGN</button>
+                    <button type="button" id="uploadButton" class="dropdownButtons">UPLOAD</button>
+                    
+                </div>
             </div>
             <div id="explodeButton">
-                <button type="button" class="button">Explode View</button>
+                <button type="button" class="buttons">EXPLODE</button>
             </div>
             <div id="fitButton">
-                <button type="button" class="button">Fit View</button>
+                <button type="button" class="buttons">FIT</button>
             </div>
             <div id="calibrateButton">
-                <button type="button" class="button">Calibrate</button>
+                <button type="button" class="buttons">CALIBRATE</button>
             </div>
             <div id="saveButton">
-                <button type="button" class="button">Save</button>
+                <button type="button" class="buttons">SAVE</button>
             </div>
         </div>
         
+        </div>
 
-        <script type="text/javascript" src="script/uploader.js" div="uploader"></script>
+        <div class="canvases">
+        <canvas id="renderCanvas"></canvas>
+        <canvas id="drawingCanvas"></canvas>
+        </div>
+        
+        <!-- <script type="text/javascript" src="script/uploader.js" div="uploader"></script> -->
         
 
         <!--<script type="text/paperscript" src="script/import.js" canvas="drawingCanvas"></script>-->
