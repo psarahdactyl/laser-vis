@@ -1,17 +1,14 @@
-var galleryUploader = new qq.FineUploader({
-    element: document.getElementById("fine-uploader-gallery"),
-    debug: true,
-    template: 'qq-template-gallery',
-    request: {
-        endpoint: '../server/uploads/'
-    },
-    thumbnails: {
-        placeholders: {
-            waitingPath: '../img/symbols/waiting-generic.png',
-            notAvailablePath: '../img/symbols/not_available-generic.png'
-        }
-    },
+var uploader = new qq.FineUploader({
+    element: document.getElementById("uploader"),
     validation: {
         allowedExtensions: ['pdf', 'svg', 'ai', 'png', 'jpg']
-    }
+    },
+    extraButtons: [
+        {
+            element: document.getElementById("uploadButton"),
+            validation: {
+                allowedExtensions: ['pdf', 'svg', 'ai', 'png', 'jpg']
+            }
+        }
+    ]
 });

@@ -20,13 +20,25 @@ var express = require("express"),
     fs = require("fs"),
     rimraf = require("rimraf"),
     mkdirp = require("mkdirp"),
-    multiparty = require('multiparty'),
+    mv = require("mv"),
+    //fileUpload = require('express-fileupload');
+    //multiparty = require('multiparty'),
+    multer  = require('multer'),
+    storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, __dirname + "/server/uploads/")
+      },
+      filename: function (req, file, cb) {
+        cb(null, file.originalname)
+      }
+    }),
+    upload = multer({ storage : storage }),
     app = express(),
 
     // paths/constants
-    fileInputName = process.env.FILE_INPUT_NAME || "qqfile",
+    fileInputName = process.env.FILE_INPUT_NAME || "file",
     publicDir = process.env.PUBLIC_DIR || __dirname,
-    nodeModulesDir = process.env.NODE_MODULES_DIR || __dirname + "\\node_modules\\",
+    nodeModulesDir = process.env.NODE_MODULES_DIR || __dirname + "/node_modules/",
     uploadedFilesPath = process.env.UPLOADED_FILES_DIR || __dirname + "\\server\\uploads\\",
     chunkDirName = "chunks",
     port = process.env.SERVER_PORT || 8080,
@@ -35,31 +47,26 @@ var express = require("express"),
 
 // routes
 app.use(express.static(publicDir));
-app.post("/server/uploads/", onUpload);
+app.post("/server/uploads/", upload.single("svg"), onUpload);
 app.use(nodeModulesDir, express.static(nodeModulesDir));
 app.delete("/uploads/:uuid", onDeleteFile);
+//app.use(fileUpload());
 
 
 app.listen(port, function(){
     console.log('Server running on 8080... ');
 });
 
-function onUpload(req, res) {
-    var form = new multiparty.Form();
+function onUpload(req, res, next) {
+    //console.log(req.file);
+    if (!req.file)
+        return res.status(400).send('No files were uploaded.');
+     
+    var svg = req.file;
+    console.log(svg);
 
-    form.parse(req, function(err, fields, files) {
-        var partIndex = fields.qqpartindex;
-
-        // text/plain is required to ensure support for IE9 and older
-        res.set("Content-Type", "text/plain");
-
-        if (partIndex == null) {
-            onSimpleUpload(fields, files[fileInputName][0], res);
-        }
-        else {
-            onChunkedUpload(fields, files[fileInputName][0], res);
-        }
-    });
+    //res.send('File uploaded!');
+    
 }
 
 function onSimpleUpload(fields, file, res) {
