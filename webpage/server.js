@@ -1,28 +1,9 @@
-/**
- * NodeJs Server-Side Example for Fine Uploader (traditional endpoints).
- * Maintained by Widen Enterprises.
- *
- * This example:
- *  - handles non-CORS environments
- *  - handles delete file requests assuming the method is DELETE
- *  - Ensures the file size does not exceed the max
- *  - Handles chunked upload requests
- *
- * Requirements:
- *  - express (for handling requests)
- *  - rimraf (for "rm -rf" support)
- *  - multiparty (for parsing request payloads)
- *  - mkdirp (for "mkdir -p" support)
- */
-
 // Dependencies
 var express = require("express"),
     fs = require("fs"),
     rimraf = require("rimraf"),
     mkdirp = require("mkdirp"),
-    mv = require("mv"),
-    //fileUpload = require('express-fileupload');
-    //multiparty = require('multiparty'),
+    bodyParser = require("body-parser"),
     multer  = require('multer'),
     storage = multer.diskStorage({
       destination: function (req, file, cb) {
@@ -44,13 +25,25 @@ var express = require("express"),
     port = process.env.SERVER_PORT || 8080,
     maxFileSize = process.env.MAX_FILE_SIZE || 0; // in bytes, 0 for unlimited
 
+var pythonProcessor = require('./script/server-side/make3DAssets')
+
 
 // routes
 app.use(express.static(publicDir));
 app.post("/server/uploads/", upload.single("svg"), onUpload);
 app.use(nodeModulesDir, express.static(nodeModulesDir));
 app.delete("/uploads/:uuid", onDeleteFile);
-//app.use(fileUpload());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+
+//http://localhost:8080/datafromcanvas
+app.post("/datafromcanvas", function(req, res) {
+    //get your canvasDataUrl here from the req object
+    var myUrlData = req("canvasDataUrl");
+    pythonProcessor.processImageInPython(myUrlData);
+});
 
 
 app.listen(port, function(){

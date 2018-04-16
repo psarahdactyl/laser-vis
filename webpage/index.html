@@ -5,9 +5,6 @@
     <meta charset="utf-8">
     <link href="css/main.css" rel="stylesheet" type="text/css">
 
-    <!-- Fine Uploader Gallery CSS file -->
-    <link href="node_modules/fine-uploader/all.fine-uploader/fine-uploader-gallery.min.css" rel="stylesheet" type="text/css">
-
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css?family=Kanit|Ropa+Sans" rel="stylesheet">
 
@@ -29,7 +26,7 @@
     <script type="text/javascript" src="script/Drawing.js"></script>
 
     <!-- Load JQuery -->
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
     <!-- Load the Paper.js library -->
     <script type="text/javascript" src="node_modules/paper/dist/paper-full.js"></script>
@@ -37,11 +34,6 @@
     <!-- Load external PaperScript and associate it with myCanvas -->
     <script type="text/paperscript" src="script/draw.js" canvas="drawingCanvas"></script>
     
-    <!-- My Scripts -->
-    <!-- <script type="text/javascript" src="script/canvas-normal-map.js"></script> -->
-    <script type="text/javascript" src="script/render.js"></script>
-    
-    <!-- <script type="text/javascript" src="script/ui.js"></script> -->
 
 
   </head>
@@ -57,14 +49,14 @@
         <div class="topButtons">
             <div id="cutOptions" class="dropdown">
                 <button type="button" class="dropbtn buttons">CUT</button>
-                  <div id="drawDropdown" class="dropdown-content">
+                  <div class="dropdown-content">
                     <button type="button" id="designButton" class="dropdownButtons">DESIGN</button>
-                    <!-- <button type="button" id="uploadButton" class="dropdownButtons">UPLOAD</button> -->
+
                     <form ref="uploadForm" id="uploadForm" enctype="multipart/form-data" action="/server/uploads/" method="post">
-                    <input id="uploadButton" type="file" name="svg" onchange="this.form.submit()"/>
-                    <!-- <input id="uploadButton" type="submit" value="UPLOAD" /> -->
-                    </form>
-                    
+                    <input id="uploadButton" type="file" name="svg" class="inputfile" onchange="this.form.submit()"/>
+                    <!-- <label for="uploadButton" class="dropdownButtons">UPLOAD</label> -->
+                    <label for="uploadButton">UPLOAD</label>
+                    </form> 
                 </div>
             </div>
             <div id="explodeButton">
@@ -76,8 +68,8 @@
             <div id="calibrateButton">
                 <button type="button" class="buttons">CALIBRATE</button>
             </div>
-            <div id="saveButton">
-                <button type="button" class="buttons">SAVE</button>
+            <div id="exportButton">
+                <button type="button" class="buttons">EXPORT</button>
             </div>
         </div>
         
@@ -88,8 +80,11 @@
         <canvas id="drawingCanvas"></canvas>
         </div>
         
-        <!-- <script type="text/javascript" src="script/svgUploader.js"></script> -->
-        <!--<script type="text/paperscript" src="script/import.js" canvas="drawingCanvas"></script>-->
+        <!-- My Scripts -->
+        <script type="text/javascript" src="script/serverCommunicator.js"></script>
+        <script type="text/javascript" src="script/render.js"></script>
+        <script type="text/javascript" src="script/svgUploader.js"></script>
+        <script type="text/javascript" src="script/connectUI.js"></script>
      </div>
 </body>
 </html>

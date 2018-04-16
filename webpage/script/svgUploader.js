@@ -1,3 +1,6 @@
-document.getElementById("uploadButton").addEventListener("click", function() {
-        document.getElementById("fileID").click();
-});
+
+function uploadSvg() {
+
+	console.log("uploading");
+
+}

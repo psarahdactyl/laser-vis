@@ -1,4 +1,3 @@
-window.onload = function() {
 // canvas settings
 var renderCanvas = document.getElementById("renderCanvas"),
     drawingCanvas = document.getElementById("drawingCanvas"),
@@ -106,8 +105,8 @@ function initCamera() {
 
 } // end init
 
-document.getElementById("explodeButton").addEventListener ("click", explodeView, false);
-document.getElementById("designButton").addEventListener ("click", sketch, false);
+//document.getElementById("explodeButton").addEventListener ("click", explodeView, false);
+//document.getElementById("designButton").addEventListener ("click", sketch, false);
 
 function explodeView() {
     var plane_even, plane_odd;
@@ -328,5 +327,3 @@ getMousePosition = function() {
 initCamera();
 initGUI();
 requestAnimationFrame(loop);
-
-};

@@ -149,18 +149,31 @@ canvas {
     z-index: 0;
 }
 
-.interface .topButtons .dropdownButtons {
+.inputfile + label {
     background-color: #d9d9d9; 
     border: 1px solid white;
     color: black; 
     padding: 11px 20px; 
     min-width:100px;
     cursor: pointer; 
+    font-size: 12pt;
     float: bottom; /* Float the buttons side by side */
     font-family: 'Kanit', sans-serif;
 }
 
-/* Dropdown Content (Hidden by Default) */
+.dropdownButtons {
+    background-color: #d9d9d9; 
+    border: 1px solid white;
+    color: black; 
+    padding: 15px 20px;
+    min-width:100px;
+    cursor: pointer; 
+    float: bottom; /* Float the buttons side by side */
+    font-size: 12pt;
+    font-family: 'Kanit', sans-serif;
+}
+
+/* Dropdown Content */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -173,16 +186,23 @@ canvas {
 }
 
 /* Links inside the dropdown */
-.dropdown-content button {
+.dropdown-content button  {
     color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
 }
 
+/*.dropdown-content label  {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+*/
 /* Change color of dropdown links on hover */
 .dropdown-content button:hover {
-	background-color: #a6a6a6
+	background-color: #a6a6a6;
 }
 
 /* Show the dropdown menu on hover */
@@ -190,22 +210,16 @@ canvas {
     display: block;
 }
 
-/*#trigger-upload {
-    color: white;
-    background-color: #00ABC7;
-    font-size: 14px;
-    padding: 7px 20px;
-    background-image: none;
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
 }
 
-#fine-uploader-manual-trigger .qq-upload-button {
-    margin-right: 15px;
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: #a6a6a6
 }
-
-#fine-uploader-manual-trigger .buttons {
-    width: 36%;
-}
-
-#fine-uploader-manual-trigger .qq-uploader .qq-total-progress-bar-container {
-    width: 60%;
-}*/
