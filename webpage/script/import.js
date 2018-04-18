@@ -3,7 +3,7 @@ var svgOptions = {
 	onLoad: onLoad
 };
 
-project.importSVG("../server/uploads/", svgOptions)
+project.importSvg("../server/uploads/", svgOptions)
 
 function onLoad(event) {
 

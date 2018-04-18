@@ -152,6 +152,10 @@ function onMouseUp(event) {
 	if(path) {
 		//path.simplify(7);
 		path.smooth();
+		var canvas = document.getElementById("drawingCanvas");
+		var canvasData = canvas.toDataURL();
+		sendBackNormals(canvasData);
+		sendBackExplode(canvasData);
 
 	}
 	if (activePath) {
@@ -166,20 +170,20 @@ function onMouseUp(event) {
 
 
 
-    var capture = project.exportSVG();
+ //    var capture = project.exportSVG();
 
-    THREE.SVGLoader = function ( manager ) {
-		this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
-	};
+ //    THREE.SVGLoader = function ( manager ) {
+	// 	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
+	// };
 
-	THREE.SVGLoader.prototype = {
-		constructor: THREE.SVGLoader,
-		load: function ( url, onLoad, onProgress, onError ) {
-			var scope = this;
-			var parser = new DOMParser();
-			var loader = new THREE.FileLoader( scope.manager );
-			loader.load( capture );
-		}
-	};
+	// THREE.SVGLoader.prototype = {
+	// 	constructor: THREE.SVGLoader,
+	// 	load: function ( url, onLoad, onProgress, onError ) {
+	// 		var scope = this;
+	// 		var parser = new DOMParser();
+	// 		var loader = new THREE.FileLoader( scope.manager );
+	// 		loader.load( capture );
+	// 	}
+	// };
 
 }

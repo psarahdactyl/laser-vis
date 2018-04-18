@@ -1,18 +1,44 @@
 var PythonShell = require('python-shell');
 
-exports.processImageInPython = function (dataAsBigAssUrl) {
+exports.normalMapInPython = function (dataAsBigAssUrl) {
+	var arg = dataAsBigAssUrl['canvasImage'];
 
 		var options = {
 		  mode: 'binary',
-		  pythonPath: 'C:/Anaconda3/Scripts',
-		  scriptPath: '/python/',
-		  args: [dataAsBigAssURL]
+		  pythonPath: 'C:/Anaconda3/python.exe',
+		  scriptPath: __dirname + '/../python/',
+		  //args: [arg]
 		};
 
-	PythonShell.run('normalMap.py', options, function (err, results) {
-		if (err) throw err;
-		// results is an array consisting of messages collected during execution
-		console.log('results: %j', results);
+	pyshell = new PythonShell('normalMap.py', options);
+	pyshell.stdin.write(arg);
+	//console.log(arg);
+	pyshell.end(function (err,code,signal) {
+	if (err) throw err;
+	  console.log('The exit code was: ' + code);
+	  console.log('The exit signal was: ' + signal);
+	  console.log('finished normal/displacement maps');
 	});	
 };
 
+
+exports.explodeInPython = function (dataAsBigAssUrl) {
+	var arg = dataAsBigAssUrl['canvasImage'];
+
+		var options = {
+		  mode: 'binary',
+		  pythonPath: 'C:/Anaconda3/python.exe',
+		  scriptPath: __dirname + '/../python/',
+		  //args: [arg]
+		};
+
+	pyshell = new PythonShell('explode.py', options);
+	pyshell.stdin.write(arg);
+	//console.log(arg);
+	pyshell.end(function (err,code,signal) {
+	if (err) throw err;
+	  console.log('The exit code was: ' + code);
+	  console.log('The exit signal was: ' + signal);
+	  console.log('finished explode alpha maps');
+	});	
+};

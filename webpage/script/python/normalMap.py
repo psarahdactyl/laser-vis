@@ -4,8 +4,11 @@ import cv2
 import numpy as np
 import math
 import sys
+import urllib.request
+import io
 import scipy
 from sklearn.preprocessing import normalize
+
 
 def create_normal_map(img):
     # make sure image is grayscale to create normal map
@@ -13,7 +16,7 @@ def create_normal_map(img):
 
     grayscale_img = cv2.cvtColor(blur_img, cv2.COLOR_BGR2GRAY)
     
-    cv2.imwrite(str(sys.argv[1])+'_displacement.png', grayscale_img)
+    cv2.imwrite('../../img/_displacement.png', grayscale_img)
 
     grayscale_img = cv2.bitwise_not(grayscale_img)
     normal_map = np.zeros(img.shape)
@@ -57,9 +60,12 @@ def create_normal_map(img):
         normal_map[i][j][1] = g
         normal_map[i][j][2] = r
 
-    cv2.imwrite(str(sys.argv[1])+'_normal.png', normal_map)
+    cv2.imwrite('../../img/_normal.png', normal_map)
 
 if __name__ == '__main__':
-  a = sys.argv[1]
-  img = cv2.imread(a)
-  create_normal_map(img)
+  #a = sys.argv[1]
+  a = sys.stdin.read()
+  with urllib.request.urlopen(a) as url:
+    img = np.asarray(bytearray(url.read()), dtype='uint8')
+    img = cv2.imdecode(img, cv2.IMREAD_COLOR)
+    create_normal_map(img)

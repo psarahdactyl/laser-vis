@@ -38,11 +38,18 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-//http://localhost:8080/datafromcanvas
-app.post("/datafromcanvas", function(req, res) {
-    //get your canvasDataUrl here from the req object
-    var myUrlData = req("canvasDataUrl");
-    pythonProcessor.processImageInPython(myUrlData);
+app.post("/canvastonormals", (req, res) => {
+    //console.log(req.body);
+    var urlData = req.body;
+    pythonProcessor.normalMapInPython(urlData);
+    res.send("success");
+});
+
+app.post("/canvastoexplode", (req, res) => {
+    //console.log(req.body);
+    var urlData = req.body;
+    pythonProcessor.explodeInPython(urlData);
+    res.send("success");
 });
 
 

@@ -35,10 +35,8 @@ function initCamera() {
             plane.scale.y = height;
         });
 
-    var normal = loader.load("../img/a_cut.png_normal.png");
-    var displacement = loader.load("../img/a_cut.png_displacement.png");
-    var alpha_odd = loader.load("../img/odd_components.png");
-    var alpha_even = loader.load("../img/even_components.png");
+    var normal = loader.load("../img/_normal.png");
+    var displacement = loader.load("../img/_displacement.png");
         
     var material = new THREE.MeshPhongMaterial( {
         map: texture,

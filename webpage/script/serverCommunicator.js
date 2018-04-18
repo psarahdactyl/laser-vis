@@ -1,10 +1,20 @@
 
-function sendBack(canvasData) {
+function sendBackNormals(canvasDataUrl) {
 	
 	$.ajax({
-        url: '/datafromcanvas',
+        url: '/canvastonormals',
         type: 'post',
-        data: {'canvasImage': canvasData}
+        data: {'canvasImage': canvasDataUrl}
+    });
+
+}
+
+function sendBackExplode(canvasDataUrl) {
+	
+	$.ajax({
+        url: '/canvastoexplode',
+        type: 'post',
+        data: {'canvasImage': canvasDataUrl}
     });
 
 }

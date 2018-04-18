@@ -2,6 +2,10 @@ import cv2
 import numpy as np
 import copy
 from collections import defaultdict
+import sys
+import urllib.request
+import io
+import scipy
 
 def get_components(src):
     src_bw = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
@@ -68,8 +72,8 @@ def combine_components(components):
         else:
             odd += components[i]
 
-    cv2.imwrite('odd_components.png', odd)
-    cv2.imwrite('even_components.png', even)
+    cv2.imwrite('../../img/odd_components.png', odd)
+    cv2.imwrite('../../img/even_components.png', even)
 
 '''
 def find_nearest_white(img, target):
@@ -149,10 +153,14 @@ def flood_fill(img):
 
 if __name__ == '__main__':
     # Read the image you want connected components of
-    a = sys.argv[1]
-    img = cv2.imread(a)
+    #a = sys.argv[1]
+    #img = cv2.imread(a)
     #output = get_components(img)
     #nodes, labels, labeled_img, largest_label = get_labeled_img(output)
+    a = sys.stdin.read()
+    with urllib.request.urlopen(a) as url:
+        img = np.asarray(bytearray(url.read()), dtype='uint8')
+        img = cv2.imdecode(img, cv2.IMREAD_COLOR)
 
-    components = flood_fill(img)
-    combine_components(components)
+        components = flood_fill(img)
+        combine_components(components)
