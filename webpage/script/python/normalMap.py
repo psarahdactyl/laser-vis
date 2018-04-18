@@ -7,6 +7,7 @@ import sys
 import urllib.request
 import io
 import scipy
+import os
 from sklearn.preprocessing import normalize
 
 
@@ -16,7 +17,7 @@ def create_normal_map(img):
 
     grayscale_img = cv2.cvtColor(blur_img, cv2.COLOR_BGR2GRAY)
     
-    cv2.imwrite('../../img/_displacement.png', grayscale_img)
+    cv2.imwrite(os.getcwd()+'/img/_displacement.png', grayscale_img)
 
     grayscale_img = cv2.bitwise_not(grayscale_img)
     normal_map = np.zeros(img.shape)
@@ -60,7 +61,7 @@ def create_normal_map(img):
         normal_map[i][j][1] = g
         normal_map[i][j][2] = r
 
-    cv2.imwrite('../../img/_normal.png', normal_map)
+    cv2.imwrite(os.getcwd()+'/img/_normal.png', normal_map)
 
 if __name__ == '__main__':
   #a = sys.argv[1]

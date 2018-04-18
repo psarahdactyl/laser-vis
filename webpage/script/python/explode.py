@@ -6,6 +6,7 @@ import sys
 import urllib.request
 import io
 import scipy
+import os
 
 def get_components(src):
     src_bw = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
@@ -48,7 +49,7 @@ def get_labeled_img(connected_comps):
     #labeled_img = cv2.morphologyEx(labeled_img, cv2.MORPH_OPEN, kernel)
     #labeled_img = cv2.morphologyEx(labeled_img, cv2.MORPH_OPEN, kernel)
 
-    cv2.imwrite('components.png', labeled_img)
+    cv2.imwrite(os.getcwd()+'components.png', labeled_img)
 
     nodes = dict()
     for i in range(num_labels):
@@ -72,8 +73,8 @@ def combine_components(components):
         else:
             odd += components[i]
 
-    cv2.imwrite('../../img/odd_components.png', odd)
-    cv2.imwrite('../../img/even_components.png', even)
+    cv2.imwrite(os.getcwd()+'\img\odd_components.png', odd)
+    cv2.imwrite(os.getcwd()+'\img\even_components.png', even)
 
 '''
 def find_nearest_white(img, target):
