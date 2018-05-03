@@ -7,6 +7,30 @@ import math
 import scipy
 from sklearn.preprocessing import normalize
 
+import time
+
+def TicTocGenerator():
+    # Generator that returns time differences
+    ti = 0           # initial time
+    tf = time.time() # final time
+    while True:
+        ti = tf
+        tf = time.time()
+        yield tf-ti # returns the time difference
+
+TicToc = TicTocGenerator() # create an instance of the TicTocGen generator
+
+# This will be the main function through which we define both tic() and toc()
+def toc(tempBool=True):
+    # Prints the time difference yielded by generator instance TicToc
+    tempTimeInterval = next(TicToc)
+    if tempBool:
+        print( "Elapsed time: %f seconds.\n" %tempTimeInterval )
+
+def tic():
+    # Records a time in TicToc, marks the beginning of a time interval
+    toc(False)
+
 def create_normal_map(img):
     # make sure image is grayscale to create normal map
     blur_img = cv2.GaussianBlur(img,(3,3),0)
@@ -29,7 +53,7 @@ def create_normal_map(img):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     '''
-    
+    tic()
     h,w,c = img.shape
     # go through each pixel in the image
     for i in range(h):
@@ -57,7 +81,9 @@ def create_normal_map(img):
         #print(normal_map[i][j])
 
     cv2.imwrite('normal.png', normal_map)
-
+    toc()
+    
 if __name__ == '__main__':
   img = cv2.imread('test1.jpg')
+
   create_normal_map(img)
