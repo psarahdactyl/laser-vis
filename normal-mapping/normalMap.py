@@ -4,10 +4,13 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-import scipy
 from sklearn.preprocessing import normalize
 
 import time
+
+###########################
+# timing code from 
+# https://stackoverflow.com/questions/5849800/tic-toc-functions-analog-in-python
 
 def TicTocGenerator():
     # Generator that returns time differences
@@ -30,6 +33,7 @@ def toc(tempBool=True):
 def tic():
     # Records a time in TicToc, marks the beginning of a time interval
     toc(False)
+###########################
 
 def create_normal_map(img):
     # make sure image is grayscale to create normal map
@@ -82,7 +86,7 @@ def create_normal_map(img):
 
     cv2.imwrite('normal.png', normal_map)
     toc()
-    
+
 if __name__ == '__main__':
   img = cv2.imread('test1.jpg')
 

@@ -3,6 +3,36 @@ import numpy as np
 import copy
 from collections import defaultdict
 
+import time
+
+###########################
+# timing code from 
+# https://stackoverflow.com/questions/5849800/tic-toc-functions-analog-in-python
+
+def TicTocGenerator():
+    # Generator that returns time differences
+    ti = 0           # initial time
+    tf = time.time() # final time
+    while True:
+        ti = tf
+        tf = time.time()
+        yield tf-ti # returns the time difference
+
+TicToc = TicTocGenerator() # create an instance of the TicTocGen generator
+
+# This will be the main function through which we define both tic() and toc()
+def toc(tempBool=True):
+    # Prints the time difference yielded by generator instance TicToc
+    tempTimeInterval = next(TicToc)
+    if tempBool:
+        print( "Elapsed time: %f seconds.\n" %tempTimeInterval )
+
+def tic():
+    # Records a time in TicToc, marks the beginning of a time interval
+    toc(False)
+    
+###########################
+
 def get_components(src):
     src_bw = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
 
@@ -156,6 +186,7 @@ if __name__ == '__main__':
     img = cv2.imread('a.png')
     #output = get_components(img)
     #nodes, labels, labeled_img, largest_label = get_labeled_img(output)
-
+    tic()
     components = flood_fill(img)
     combine_components(components)
+    toc()
