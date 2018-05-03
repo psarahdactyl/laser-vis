@@ -131,8 +131,10 @@ function explodeView() {
             plane_even.name = "evenPlane";
         });
 
-        var normal = loader.load("../img/a_cut.png_normal.png");
-        var displacement = loader.load("../img/a_cut.png_displacement.png");
+        // var normal = loader.load("../img/a_cut.png_normal.png");
+        // var displacement = loader.load("../img/a_cut.png_displacement.png");
+        var normal = loader.load("../img/_normal.png");
+        var displacement = loader.load("../img/_displacement.png");
         var alpha_odd = loader.load("../img/odd_components.png");
         var alpha_even = loader.load("../img/even_components.png");
             
