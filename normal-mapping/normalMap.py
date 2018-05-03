@@ -59,34 +59,43 @@ def create_normal_map(img):
     '''
     tic()
     h,w,c = img.shape
+
+    ones = np.ones(sobelx.shape)
+    zeros = np.zeros(sobelx.shape)
+    gx = np.stack([ones, zeros, sobelx], axis=2)
+    gy = np.stack([zeros, ones, sobely], axis=2)
+    
+    n = np.cross(gx,gy)
+    print(n)
+    # i don't think this is the right normal matrix calculation
+    normals = n / np.linalg.norm(n, axis=0)
+    print(normals)
+    normals = ((normals + 1.0) / 2.0) * 255
+
+
     # go through each pixel in the image
     for i in range(h):
       for j in range(w):
 
-        gx = np.array([1,0,sobelx[i][j]])
-        gy = np.array([0,1,sobely[i][j]])
-
-
-        n = np.cross(gx,gy)
 
         #normal = normal / np.linalg.norm(normal)
-        normal = normalize(n[:,np.newaxis], axis=0).ravel()
+        #normal = normalize(n[:,np.newaxis], axis=0).ravel()
 
-        r = ((normal[0] + 1.0) / 2.0) * 255   
-        g = ((normal[1] + 1.0) / 2.0) * 255   
-        b = ((normal[2] + 1.0) / 2.0) * 255
+        #r = ((normal[0] + 1.0) / 2.0) * 255   
+        #g = ((normal[1] + 1.0) / 2.0) * 255   
+        #b = ((normal[2] + 1.0) / 2.0) * 255
 
         #print(r,g,b)
 
-        normal_map[i][j][0] = b
-        normal_map[i][j][1] = g
-        normal_map[i][j][2] = r
+        normal_map[i][j][0] = normals[i][j][2]
+        normal_map[i][j][1] = normals[i][j][1]
+        normal_map[i][j][2] = normals[i][j][0]
 
         #print(normal_map[i][j])
 
     cv2.imwrite('normal.png', normal_map)
     toc()
-
+    
 if __name__ == '__main__':
   img = cv2.imread('test1.jpg')
 
