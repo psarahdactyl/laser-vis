@@ -62,28 +62,23 @@ def create_normal_map(img):
     print(n)
 
     h,w,c = n.shape
-    print(h,w,c)
+    #print(h,w,c)
     normals = np.empty_like(n)
 
-    # i don't think this is the right normal matrix calculation
-    test = np.linalg.norm(n, axis=2)
-    print(test.shape)
-    normals = np.divide(n,test[:,:,np.newaxis])
+    norm = np.linalg.norm(n, axis=2)
+    normals = np.divide(n,norm[:,:,np.newaxis])
     normals = ((normals + 1.0) / 2.0) * 255
-    print(normals)
+    #print(normals)
 
-    # go through each pixel in the image
-    for i in range(h):
-      for j in range(w):
-
-        normal_map[i][j][0] = normals[i][j][2]
-        normal_map[i][j][1] = normals[i][j][1]
-        normal_map[i][j][2] = normals[i][j][0]
+    normal_map = np.empty_like(normals)
+    normal_map[:,:,0] = normals[:,:,2]
+    normal_map[:,:,1] = normals[:,:,1]
+    normal_map[:,:,2] = normals[:,:,0]
 
     cv2.imwrite('normal.png', normal_map)
     toc()
     
 if __name__ == '__main__':
-  img = cv2.imread('hello.png')
+  img = cv2.imread('test.jpg')
 
   create_normal_map(img)
