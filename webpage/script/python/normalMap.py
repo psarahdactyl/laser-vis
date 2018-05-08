@@ -10,15 +10,12 @@ import scipy
 import os
 from sklearn.preprocessing import normalize
 
-
 def create_normal_map(img):
     # make sure image is grayscale to create normal map
     blur_img = cv2.GaussianBlur(img,(3,3),0)
 
     grayscale_img = cv2.cvtColor(blur_img, cv2.COLOR_BGR2GRAY)
-    
     cv2.imwrite(os.getcwd()+'/img/_displacement.png', grayscale_img)
-
     grayscale_img = cv2.bitwise_not(grayscale_img)
     normal_map = np.zeros(img.shape)
 
@@ -28,40 +25,28 @@ def create_normal_map(img):
     sobelx = np.absolute(((sobelx*2.0) / 255.0) - 1.0)
     sobely = np.absolute(((sobely*2.0) / 255.0) - 1.0)
 
-    '''
-    cv2.imshow('image', sobelx)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    cv2.imshow('image', sobely)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-    '''
+    ones = np.ones(sobelx.shape)
+    zeros = np.zeros(sobelx.shape)
+    gx = np.stack([ones, zeros, sobelx], axis=2)
+    gy = np.stack([zeros, ones, sobely], axis=2)
     
-    h,w,c = img.shape
-    # go through each pixel in the image
-    for i in range(h):
-      for j in range(w):
+    n = np.cross(gx,gy)
 
-        gx = np.array([1,0,sobelx[i][j]])
-        gy = np.array([0,1,sobely[i][j]])
+    normals = np.empty_like(n)
 
+    norm = np.linalg.norm(n, axis=2)
+    normals = np.divide(n,norm[:,:,np.newaxis])
+    normals = ((normals + 1.0) / 2.0) * 255
+    #print(normals)
 
-        n = np.cross(gx,gy)
-
-        #normal = normal / np.linalg.norm(normal)
-        normal = normalize(n[:,np.newaxis], axis=0).ravel()
-
-        r = ((normal[0] + 1.0) / 2.0) * 255   
-        g = ((normal[1] + 1.0) / 2.0) * 255   
-        b = ((normal[2] + 1.0) / 2.0) * 255
-
-        #print(r,g,b)
-
-        normal_map[i][j][0] = b
-        normal_map[i][j][1] = g
-        normal_map[i][j][2] = r
+    normal_map = np.empty_like(normals)
+    normal_map[:,:,0] = normals[:,:,2]
+    normal_map[:,:,1] = normals[:,:,1]
+    normal_map[:,:,2] = normals[:,:,0]
 
     cv2.imwrite(os.getcwd()+'/img/_normal.png', normal_map)
+
+
 
 if __name__ == '__main__':
   #a = sys.argv[1]
