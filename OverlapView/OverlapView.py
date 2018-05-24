@@ -3,9 +3,7 @@ import cairocffi as cairo
 from pyparsing import *
 import os, sys
 import xml.etree.ElementTree as et
-from xml.dom import minidom
-from svg.path import parse_path
-from random import randint
+
 #get file
 file = sys.argv[1] 
 xml_file = os.path.abspath(__file__)
@@ -52,12 +50,10 @@ def get_commands(xml_file):
 
         command_list.append(cairo_commands) #Add them to the list
         cairo_commands = ""
-        print(paths)
+
     return command_list
 
 command_list = get_commands(xml_file)
-    #ctx.set_source_rgb(1,0,0)
-print(command_list)
 
 def renderThis(command_list):
     img = cairo.ImageSurface(cairo.FORMAT_ARGB32, 2000,2000)
@@ -66,19 +62,13 @@ def renderThis(command_list):
     ctx.set_line_width(10.0)
     ctx.set_source_rgba(1.0, 1.0, 1.0, 0.25)
     ctx.paint()
-
+    
+    ctx.set_source_rgba(0.05,0.04,0.03, 1.0)
     ctx.set_operator(cairo.OPERATOR_ADD)
-    #ctx.set_source_rgba(0.0, 0.2, 0.00)
     for c in command_list:
-        a = 0.001*randint(100,500)
-        e =0.001*randint(100,400)
-        d = 0.001*randint(100,300)
-        ctx.set_source_rgba(a, e, d)
         exec(c)
-        #print(c)
         ctx.stroke()
     img.write_to_png("output.png")
-    #img.finish()
     return True
 
 renderThis(command_list)
