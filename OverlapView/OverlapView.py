@@ -7,8 +7,8 @@ import svgpathtools as sp
 
 #get file
 file = sys.argv[1]
-#pathlist, attlist, svgatt = sp.svg2paths2('/Users/arjunchhabra/Desktop/test2.svg')
-#sp.wsvg(pathlist, attributes = attlist, filename = file)
+pathlist, attlist, svgatt = sp.svg2paths2(file)
+sp.wsvg(pathlist, attributes = attlist, filename = file)
 xml_file = os.path.abspath(__file__)
 xml_file = os.path.dirname(xml_file)
 xml_file = os.path.join(xml_file, file)
@@ -29,6 +29,8 @@ def get_commands(xml_file):
     #parse using pyparsing
     tree = et.parse(xml_file)
     ns = "http://www.w3.org/2000/svg" #The XML namespace.
+    root = tree.getroot()
+    rval2 = [root.get("viewBox"), root.get('width'), root.get('height')]
     paths = []
     for group in tree.iter('{%s}svg' % ns):
         for e in group.iter('{%s}path' % ns):
@@ -41,7 +43,7 @@ def get_commands(xml_file):
     for tokens in paths:
         for command,couples in tokens: #looks weird, but it works :)
             c = couples.asList()
-            c[:] = [str(float(i)*10.0) for i in c]
+            #c[:] = [str(float(i)*10.0) for i in c]
             if command == "M":
                 cairo_commands += "ctx.move_to(%s,%s);" % (c[0],c[1])
             if command == "C":
@@ -54,12 +56,23 @@ def get_commands(xml_file):
         command_list.append(cairo_commands) #Add them to the list
         cairo_commands = ""
 
-    return command_list
+    return command_list, rval2
 
-command_list = get_commands(xml_file)
+command_list, attrib = get_commands(xml_file)
+def renderThis(command_list, attrib):
+    
+    accum = ''
+    for i in range(len(attrib[1])):
+        if attrib[1][i] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+            accum += attrib[1][i]
+    width = int(accum)
+    accum = ''
+    for i in range(len(attrib[2])):
+        if attrib[2][i] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+            accum += attrib[2][i]
+    height = int(accum)
 
-def renderThis(command_list):
-    img = cairo.ImageSurface(cairo.FORMAT_ARGB32, 2000,2000)
+    img = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
     ctx = cairo.Context(img)
     ctx.set_antialias(cairo.ANTIALIAS_BEST)
     ctx.set_line_width(10.0)
@@ -74,6 +87,6 @@ def renderThis(command_list):
     img.write_to_png("output.png")
     return True
 
-renderThis(command_list)
+renderThis(command_list, attrib)
 
 
