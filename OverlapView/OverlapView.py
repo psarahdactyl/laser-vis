@@ -3,9 +3,12 @@ import cairocffi as cairo
 from pyparsing import *
 import os, sys
 import xml.etree.ElementTree as et
+import svgpathtools as sp
 
 #get file
-file = sys.argv[1] 
+file = sys.argv[1]
+#pathlist, attlist, svgatt = sp.svg2paths2('/Users/arjunchhabra/Desktop/test2.svg')
+#sp.wsvg(pathlist, attributes = attlist, filename = file)
 xml_file = os.path.abspath(__file__)
 xml_file = os.path.dirname(xml_file)
 xml_file = os.path.join(xml_file, file)
